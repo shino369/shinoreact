@@ -41,7 +41,7 @@ function App() {
     <BrowserRouter>
       <div className="d-flex row h-100">
         <Sidebar
-          className={`${isCollapse ? 'col-1' : 'col-3'} bg-primary`}
+          className={`${isCollapse ? 'col-1' : 'col-3'} bg-secondary`}
           toggle={() => setIsCollapse(!isCollapse)}
         />
         <div className={`col bg-white`}>
