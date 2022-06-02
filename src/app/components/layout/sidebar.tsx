@@ -21,9 +21,6 @@ const Sidebar: React.FC<Props> = ({ className, toggle }) => {
       <div className="sidebar-header d-flex justify-content-between">
         <div className="sidebar-header-logo"></div>
         <div>sidebar</div>
-        <button className="btn btn-primary" onClick={toggle}>
-          click
-        </button>
       </div>
       <div className="sidebar-body">
         <div className="sidebar-body-item d-flex flex-column justify-content-center pt-2">

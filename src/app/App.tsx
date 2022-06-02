@@ -41,10 +41,16 @@ function App() {
     <BrowserRouter>
       <div className="d-flex row h-100">
         <Sidebar
-          className={`${isCollapse ? 'col-1' : 'col-3'} bg-secondary`}
-          toggle={() => setIsCollapse(!isCollapse)}
+          className={`${isCollapse ? "col-1" : "col-3"} bg-secondary`}
+          toggle={() => {}}
         />
-        <div className={`col bg-white`}>
+        <div className={`col bg-white route-wrapper`}>
+          <button
+            className="btn btn-secondary toggle-btn"
+            onClick={() => setIsCollapse(!isCollapse)}
+          >
+            click
+          </button>
           <Routes>
             {userRoutes.map((route, index) => (
               <Route path={route.path} key={index} element={route.component} />

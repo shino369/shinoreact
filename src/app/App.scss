@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+.route-wrapper {
+  position: relative;
+  .toggle-btn {
+    position: absolute;
+    top: 0;
+    left: 0.5rem;
+  }
+}
