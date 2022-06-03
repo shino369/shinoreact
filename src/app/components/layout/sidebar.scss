@@ -15,21 +15,25 @@
   .accordion-button{
     @include typography(1.2rem, 'semibold');
     background-color: transparent;
-    color: white;
+    color: $text-primary;
     padding: 0;
     &:focus{
       border: none;
       box-shadow: none;
     }
+
+    &::after{
+      filter: contrast(0.1);
+    }
   }
 
   .accordion-button:not(.collapsed) {
-    color: white;
+    color: $text-primary;
     background-color: transparent;
     box-shadow: none;
 
     &::after{
-      filter: grayscale(1) contrast(2.5);
+      filter: grayscale(1) contrast(0.1);
     }
   }
 
@@ -45,22 +49,12 @@
   .header { 
     transition: all 0.2s ease-in-out;
     --webkit-transition: all 0.2s ease-in-out;
-
-    &.show{
-      opacity: 1;
-      // transform: scaleX(1);
-    }
-
-    &.hide{
-      opacity: 0;
-      // transform: scaleX(0);
-    }
   }
 
   .label{
     @include typography(1.2rem, 'semibold');
     white-space: nowrap;
-    color: white;
+    color: $text-primary;
     &:hover{
       background-color: rgba(255, 255, 255, 0.4);
     }
@@ -72,15 +66,6 @@
     .label-text{
       transition: all 0.2s ease-in-out;
       --webkit-transition: all 0.2s ease-in-out;
-      &.show{
-        opacity: 1;
-        transform: translateX(0);
-      }
-  
-      &.hide{
-        opacity: 0;
-        transform: translateX(100%);
-      }
     }
 
 
@@ -88,8 +73,20 @@
 
   .sidebar-header{
     @include typography(1.5rem, 'semibold');
-    color: white;
-
-    background-color: rgba(255, 255, 255, 0.4);
+    color: $text-primary;
+    color: black;
+    background-color: white;
+    height: 3.5rem;
   }
+}
+
+
+.show{
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hide{
+  opacity: 0;
+  transform: translateX(100%);
 }

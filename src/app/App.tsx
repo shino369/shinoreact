@@ -31,6 +31,13 @@ export const GlobalStyle = createGlobalStyle`
     font-family: inherit;
     font-size: inherit;
   }
+
+  .topbar {
+    height: 3.5rem;
+    background-color: white ;
+    -webkit-box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
+    box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
+  }
 `;
 
 function App() {
@@ -41,7 +48,17 @@ function App() {
       <div className="d-flex row mx-0  h-100">
         <Sidebar isCollapsed={isCollapsed} toggle={() => {}} />
         <div className={`col bg-white route-wrapper`}>
-          <Icon button onClick={()=>setIsCollapsed(!isCollapsed)} btnClassName="m-1 abs-top-left" name="menu" color="white" size={24} />
+          <div className="d-flex w-100 border-bottom abs-top-left topbar">
+            <Icon
+              button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              btnClassName=""
+              name="menu"
+              color="white"
+              size={24}
+            />
+          </div>
+
           <Routes>
             {userRoutes.map((route, index) => (
               <Route path={route.path} key={index} element={route.component} />

@@ -37,7 +37,7 @@ $font-weights: (
   @each $name, $weight in $font-weights {
     .size-#{$i}-#{$name} {
       @include font-size($i);
-      font-family: 'ivymode',  Arial, Helvetica, sans-serif;
+      font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       font-weight: $weight;
       text-align: unset;
       white-space: pre-wrap;
@@ -53,7 +53,7 @@ $font-weights: (
   $white-space: pre-wrap
 ) {
   @include font-size($font-size);
-  font-family: 'ivymode',  Arial, Helvetica, sans-serif;
+  font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: map.get($font-weights, $font-weight);
   text-align: $text-align;
   white-space: $white-space;

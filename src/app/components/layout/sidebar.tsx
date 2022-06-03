@@ -33,18 +33,18 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
     <div
       className={`${
         isCollapsed ? "collapsed" : "expanded"
-      } bg-secondary sidebar px-0`}
+      } bg-primary sidebar px-0`}
     >
       <div
-        className={`sidebar-header d-flex justify-content-start ${
+        className={`sidebar-header border-right d-flex justify-content-start ${
           isCollapsed ? "px-1" : "px-4"
-        } `}
+        } py-2`}
       >
         <div className="sidebar-header-logo"></div>
         <div className={`header ${isCollapsed ? "hide" : "show"}`}>sidebar</div>
       </div>
       <div className={`sidebar-body`}>
-        <div className="sidebar-body-item d-flex flex-column justify-content-start">
+        <div className="sidebar-body-item d-flex flex-column j  ustify-content-start">
           <Accordion
             defaultActiveKey={[defaultActiveAccordion.toString()]}
             flush
@@ -52,7 +52,7 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
           >
             {Object.keys(groupRoutes).map((group, index) => (
               <Accordion.Item
-                className={`border-bottom`}
+                className={`border-bottom-light`}
                 eventKey={index.toString()}
               >
                 <Accordion.Header

@@ -1,47 +1,42 @@
-@import '~bootstrap/scss/functions';
+@import "./color.scss";
 
-// 2. Include any default variable overrides here
-// $page-width: 1280px;
-// $theme-colors: (
-//   'primary': $app-primary,
-//   'secondary': $background-secondary,
-//   'danger': $toast-error,
-//   'warning': $app-star,
-//   'dark': $app-black,
-// );
-// $body-bg: $app-primary;
+@import "~bootstrap/scss/bootstrap";
+@import "./typology.scss";
 
-// 3. Include remainder of required Bootstrap stylesheets
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins';
-@import './typology.scss';
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $app-success,
+  "danger": $app-danger,
+  "warning": $app-warning,
+);
+$body-bg: $app-background;
+
 html,
 body {
-    margin: 0 !important;
-      /* Hide scrollbar for IE, Edge and Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  margin: 0 !important;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
-
-.left{
+.left {
   justify-content: flex-start;
 }
 
-.right{
+.right {
   justify-content: flex-end;
 }
 
-.center{
+.center {
   justify-content: center;
 }
 
-
-.pointer{
+.pointer {
   cursor: pointer;
 }
 
@@ -69,25 +64,46 @@ body {
 }
 
 .abs-top-left {
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .abs-bottom-left {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .abs-bottom-left {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
-.abs-bottom-right{
-    position: absolute;
-    bottom: 0;
-    right: 0;
+.abs-bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
+
+.border-bottom-light {
+  border-bottom: 1px solid $border-light !important;
+}
+
+.border-right-light {
+  border-right: 1px solid $border-light !important;
+}
+
+.border-left-light {
+  border-left: 1px solid $border-light !important;
+}
+
+.border-top-light {
+  border-top: 1px solid $border-light !important;
+}
+
+.btn:focus,.btn:active {
+    outline: none !important;
+    box-shadow: none;
+ }
