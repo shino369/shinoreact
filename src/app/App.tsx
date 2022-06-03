@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import { userRoutes } from "./routes/routing";
 import { Icon, Sidebar } from "./components";
+import Hamburger from 'hamburger-react'
+
 
 export const GlobalStyle = createGlobalStyle`
   html,
@@ -44,19 +46,20 @@ function App() {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/shinoreact">
       <div className="d-flex row mx-0  h-100">
         <Sidebar isCollapsed={isCollapsed} toggle={() => {}} />
         <div className={`col bg-white route-wrapper`}>
           <div className="d-flex w-100 border-bottom abs-top-left topbar">
-            <Icon
+            <Hamburger toggled={isCollapsed} toggle={()=>setIsCollapsed(!isCollapsed)} />
+            {/* <Icon
               button
               onClick={() => setIsCollapsed(!isCollapsed)}
               btnClassName=""
               name="menu"
               color="white"
               size={24}
-            />
+            /> */}
           </div>
 
           <Routes>
