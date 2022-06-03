@@ -1,4 +1,95 @@
+@import 'theme/custom.scss';
+
 .sidebar {
   transition: all 0.2s ease-in-out;
-  --webkit-transition: all 0.3s ease-in-out;
+  --webkit-transition: all 0.2s ease-in-out;
+  flex: 0 0 auto;
+
+  &.collapsed {
+    width: 5rem;
+  }
+  &.expanded {
+    width: 20rem;
+  }
+
+  .accordion-button{
+    @include typography(1.2rem, 'semibold');
+    background-color: transparent;
+    color: white;
+    padding: 0;
+    &:focus{
+      border: none;
+      box-shadow: none;
+    }
+  }
+
+  .accordion-button:not(.collapsed) {
+    color: white;
+    background-color: transparent;
+    box-shadow: none;
+
+    &::after{
+      filter: grayscale(1) contrast(2.5);
+    }
+  }
+
+  .accordion-body{
+    padding: 0;
+  }
+
+  .accordion-item{
+    background-color: transparent;
+    border: none;
+  }
+
+  .header { 
+    transition: all 0.2s ease-in-out;
+    --webkit-transition: all 0.2s ease-in-out;
+
+    &.show{
+      opacity: 1;
+      // transform: scaleX(1);
+    }
+
+    &.hide{
+      opacity: 0;
+      // transform: scaleX(0);
+    }
+  }
+
+  .label{
+    @include typography(1.2rem, 'semibold');
+    white-space: nowrap;
+    color: white;
+    &:hover{
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    &.active{
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .label-text{
+      transition: all 0.2s ease-in-out;
+      --webkit-transition: all 0.2s ease-in-out;
+      &.show{
+        opacity: 1;
+        transform: translateX(0);
+      }
+  
+      &.hide{
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+
+
+  }
+
+  .sidebar-header{
+    @include typography(1.5rem, 'semibold');
+    color: white;
+
+    background-color: rgba(255, 255, 255, 0.4);
+  }
 }

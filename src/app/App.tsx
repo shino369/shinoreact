@@ -1,16 +1,15 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.scss";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import { userRoutes } from "./routes/routing";
-import { Sidebar } from "./components";
+import { Icon, Sidebar } from "./components";
 
 export const GlobalStyle = createGlobalStyle`
   html,
   body {
-    /* height: 100%;
-    width: 100%; */
+    // height: 100%;
+    // width: 100%;
   }
 
   body {
@@ -18,8 +17,8 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   #root {
-    /* min-height: 100%;
-    min-width: 100%; */
+    // min-height: 100%;
+    // min-width: 100%;
   }
 
   p,
@@ -35,22 +34,14 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  const [isCollapse, setIsCollapse] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   return (
     <BrowserRouter>
-      <div className="d-flex row h-100">
-        <Sidebar
-          className={`${isCollapse ? "col-1" : "col-3"} bg-secondary`}
-          toggle={() => {}}
-        />
+      <div className="d-flex row mx-0  h-100">
+        <Sidebar isCollapsed={isCollapsed} toggle={() => {}} />
         <div className={`col bg-white route-wrapper`}>
-          <button
-            className="btn btn-secondary toggle-btn"
-            onClick={() => setIsCollapse(!isCollapse)}
-          >
-            click
-          </button>
+          <Icon button onClick={()=>setIsCollapsed(!isCollapsed)} btnClassName="m-1 abs-top-left" name="menu" color="white" size={24} />
           <Routes>
             {userRoutes.map((route, index) => (
               <Route path={route.path} key={index} element={route.component} />
