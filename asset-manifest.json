@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/shinoreact/static/css/main.24cbe167.css",
-    "main.js": "/shinoreact/static/js/main.56a48677.js",
+    "main.js": "/shinoreact/static/js/main.d5799398.js",
     "static/js/64.12cfc229.chunk.js": "/shinoreact/static/js/64.12cfc229.chunk.js",
     "static/js/270.96ebee89.chunk.js": "/shinoreact/static/js/270.96ebee89.chunk.js",
     "static/js/787.b464cf3c.chunk.js": "/shinoreact/static/js/787.b464cf3c.chunk.js",
     "static/media/menu.svg": "/shinoreact/static/media/menu.93fe358eda65d817a41a.svg",
     "index.html": "/shinoreact/index.html",
     "main.24cbe167.css.map": "/shinoreact/static/css/main.24cbe167.css.map",
-    "main.56a48677.js.map": "/shinoreact/static/js/main.56a48677.js.map",
+    "main.d5799398.js.map": "/shinoreact/static/js/main.d5799398.js.map",
     "64.12cfc229.chunk.js.map": "/shinoreact/static/js/64.12cfc229.chunk.js.map",
     "270.96ebee89.chunk.js.map": "/shinoreact/static/js/270.96ebee89.chunk.js.map",
     "787.b464cf3c.chunk.js.map": "/shinoreact/static/js/787.b464cf3c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.24cbe167.css",
-    "static/js/main.56a48677.js"
+    "static/js/main.d5799398.js"
   ]
 }
