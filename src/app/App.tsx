@@ -46,7 +46,7 @@ function App() {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   return (
-    <BrowserRouter basename="/shinoreact">
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <div className="d-flex row mx-0  h-100">
         <Sidebar isCollapsed={isCollapsed} toggle={() => {}} />
         <div className={`col bg-white route-wrapper`}>
