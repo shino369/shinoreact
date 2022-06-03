@@ -55,6 +55,7 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
           >
             {Object.keys(groupRoutes).map((group, index) => (
               <Accordion.Item
+                key={index}
                 className={`border-bottom-light`}
                 eventKey={index.toString()}
               >
@@ -68,6 +69,7 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
                 <Accordion.Body>
                   {groupRoutes[group].map((route, i) => (
                     <NavLink
+                      key={i}
                       style={{
                         textDecoration: "none",
                       }}

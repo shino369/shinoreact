@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.scss";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import { userRoutes } from "./routes/routing";
 import { Icon, Sidebar } from "./components";
 import Hamburger from 'hamburger-react'
+import { useMediaQuery } from 'react-responsive';
 
 
 export const GlobalStyle = createGlobalStyle`
@@ -51,6 +52,9 @@ export const GlobalStyle = createGlobalStyle`
 
 function App() {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const isMobile = useMediaQuery({ query: `(max-width: 768px)` });
+
+  useEffect(() => {console.log(isMobile)},[isMobile])
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
