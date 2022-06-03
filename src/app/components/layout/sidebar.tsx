@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./sidebar.scss";
 import { groupRoutes, userRoutes } from "app/routes/routing";
 import { Accordion } from "react-bootstrap";
+import Hamburger from 'hamburger-react'
 
 export interface Props {
   className?: string;
@@ -37,11 +38,13 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
     >
       <div
         className={`sidebar-header border-right d-flex justify-content-start ${
-          isCollapsed ? "px-1" : "px-4"
+          isCollapsed ? "px-1" : "ps-4 pe-2"
         } py-2`}
       >
         <div className="sidebar-header-logo"></div>
-        <div className={`header ${isCollapsed ? "hide" : "show"}`}>sidebar</div>
+        <div className={`d-flex w-100 header align-items-center justify-content-between  ${isCollapsed ? "hide" : "show"}`}>sidebar
+        <div className="side-menu"><Hamburger toggled={!isCollapsed} toggle={toggle} /></div>
+        </div>
       </div>
       <div className={`sidebar-body`}>
         <div className="sidebar-body-item d-flex flex-column j  ustify-content-start">

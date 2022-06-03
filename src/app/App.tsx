@@ -40,6 +40,16 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
     box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
   }
+
+  .width-zero {
+    width: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .menu{
+      display: none;
+    }
+  }
 `;
 
 function App() {
@@ -48,10 +58,11 @@ function App() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <div className="d-flex row mx-0  h-100">
-        <Sidebar isCollapsed={isCollapsed} toggle={() => {}} />
-        <div className={`col bg-white route-wrapper`}>
-          <div className="d-flex w-100 border-bottom abs-top-left topbar">
-            <Hamburger toggled={isCollapsed} toggle={()=>setIsCollapsed(!isCollapsed)} />
+        <Sidebar isCollapsed={isCollapsed} toggle={() => {setIsCollapsed(!isCollapsed)}} />
+        <div className={`col bg-white route-wrapper ${!isCollapsed? 'width-zero px-0 mx-0 overflow-hidden':''}`}>
+          <div className="d-flex w-100 border-bottom abs-top-left topbar align-items-center">
+            <div className={`${isCollapsed ? '':'menu'}`}><Hamburger toggled={!isCollapsed} toggle={()=>setIsCollapsed(!isCollapsed)} /></div>
+            
             {/* <Icon
               button
               onClick={() => setIsCollapsed(!isCollapsed)}

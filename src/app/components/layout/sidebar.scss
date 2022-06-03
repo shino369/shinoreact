@@ -1,16 +1,42 @@
 @import 'theme/custom.scss';
 
+@media screen and (max-width: 768px) {
+  .sidebar {
+    &.collapsed {
+      width: 0%;
+    }
+    &.expanded {
+      width: 100%;
+    }
+  }
+}
+@media screen and (min-width: 768px) {
+  .sidebar {
+    &.collapsed {
+      width: 5rem;
+    }
+    &.expanded {
+      width: 20rem;
+    }
+  }
+
+  .side-menu{
+    display: none;
+  }
+}
+
+
+
+  
+
+
 .sidebar {
   transition: all 0.2s ease-in-out;
   --webkit-transition: all 0.2s ease-in-out;
   flex: 0 0 auto;
+  height: 100%;
 
-  &.collapsed {
-    width: 5rem;
-  }
-  &.expanded {
-    width: 20rem;
-  }
+
 
   .accordion-button{
     @include typography(1.2rem, 'semibold');
