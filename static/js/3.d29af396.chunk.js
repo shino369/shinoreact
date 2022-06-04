@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkshinoreact=self.webpackChunkshinoreact||[]).push([[3],{3:function(e,n,t){t.r(n),t.d(n,{AboutPage:function(){return r}});var c=t(504),i=t(184),r=function(){return(0,i.jsxs)("div",{className:"d-flex flex-column justify-content-center align-items-center",children:[(0,i.jsx)("div",{children:"hello About!"}),(0,i.jsx)(c.rU,{to:"/detail",children:"go to detail"})]})}}}]);
+//# sourceMappingURL=3.d29af396.chunk.js.map
