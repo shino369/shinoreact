@@ -12,9 +12,15 @@ export interface Props {
   className?: string;
   isCollapsed: boolean;
   toggle: () => void;
+  close: () => void;
 }
 
-const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
+const Sidebar: React.FC<Props> = ({
+  className,
+  toggle,
+  isCollapsed,
+  close,
+}) => {
   let location = useLocation();
   const [activeRoute, setActiveRoute] = React.useState(location.pathname);
   const [defaultActiveAccordion, setDefaultActiveAccordion] = React.useState(
@@ -28,6 +34,7 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
 
   React.useEffect(() => {
     setActiveRoute(location.pathname);
+    close();
     // const route = userRoutes.filter(
     //   (route) => route.path === location.pathname
     // )[0];
@@ -92,29 +99,29 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
       </div>
       <div className={`sidebar-body`}>
         <div className="sidebar-body-item d-flex flex-column j  ustify-content-start">
-        {userRoutes.filter(f=> f.group.length === 0).map((route, i) => (
-                    <NavLink
-                      key={i}
-                      style={{
-                        textDecoration: "none",
-                      }}
-                      to={route.path}
-                    >
-                      <div
-                        className={`${isCollapsed ? "px-1" : "px-4"} ${
-                          activeRoute === route.path ? "active" : ""
-                        } label text-uppercase py-3`}
-                      >
-                        <div
-                          className={`${
-                            isCollapsed ? "hide" : "show"
-                          } label-text`}
-                        >
-                          {route.name}
-                        </div>
-                      </div>
-                    </NavLink>
-                  ))}
+          {userRoutes
+            .filter((f) => f.group.length === 0)
+            .map((route, i) => (
+              <NavLink
+                key={i}
+                style={{
+                  textDecoration: "none",
+                }}
+                to={route.path}
+              >
+                <div
+                  className={`${isCollapsed ? "px-1" : "px-4"} ${
+                    activeRoute === route.path ? "active" : ""
+                  } label text-uppercase py-3`}
+                >
+                  <div
+                    className={`${isCollapsed ? "hide" : "show"} label-text`}
+                  >
+                    {route.name}
+                  </div>
+                </div>
+              </NavLink>
+            ))}
           <Accordion
             defaultActiveKey={[defaultActiveAccordion.toString()]}
             flush
@@ -123,7 +130,9 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
             {Object.keys(groupRoutes).map((group, index) => (
               <Accordion.Item
                 key={index}
-                className={`border-bottom-light ${index === 0 ? 'border-top-light' : ''}`}
+                className={`border-bottom-light ${
+                  index === 0 ? "border-top-light" : ""
+                }`}
                 eventKey={index.toString()}
               >
                 <Accordion.Header

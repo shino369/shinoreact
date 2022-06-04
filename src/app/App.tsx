@@ -73,6 +73,9 @@ function App() {
           toggle={() => {
             setIsCollapsed(!isCollapsed);
           }}
+          close={() => {
+            isMobile && setIsCollapsed(true);
+          }}
         />
         <div className={`col d-flex bg-white route-wrapper px-0`}>
           <Topbar
