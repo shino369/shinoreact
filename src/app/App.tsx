@@ -34,14 +34,34 @@ export const GlobalStyle = createGlobalStyle`
     font-size: inherit;
   }
 
-  .topbar {
-    height: 3.5rem;
-    background-color: rgba(255,255,255,0.7);
-    backdrop-filter: blur(5px);
-    -webkit-box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
-    box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
+  .fixed-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: fit-content;
+    height: 100vh;
+    z-index: 1030;
+    overflow: hidden;
   }
 
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3.5rem;
+    background-color: rgba(255,255,255,0.7);
+    // backdrop-filter: blur(5px);
+    -webkit-box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
+    box-shadow: 13px 1px 15px -4px rgb(0 0 0 / 20%);
+    z-index: 1020;
+    transition: all 0.2s ease-in-out;
+    --webkit-transition: all 0.2s ease-in-out;
+  }
+
+  .route-wrapper {
+    transition: all 0.2s ease-in-out;
+    --webkit-transition: all 0.2s ease-in-out;
+  }
 
   .nowrap: {
     flex-wrap: nowrap;
@@ -52,9 +72,20 @@ export const GlobalStyle = createGlobalStyle`
   .common-wrapper{
     flex-grow: 1;
     padding-top: 3.5rem;
-    height: 100vh;
-    overflow-y: scroll;
+    // height: 100vh;
+    // overflow-y: scroll;
   }
+  @media screen and (min-width: 768px) {
+    .main-ps-5rem{
+        padding-left: 5rem;
+    }
+    
+    .main-ps-20rem{
+        padding-left: 20rem;
+    }
+  }
+    
+
 `;
 
 function App() {
@@ -65,9 +96,18 @@ function App() {
     console.log(isMobile);
   }, [isMobile]);
 
+  useEffect(() => {
+    if(isMobile && !isCollapsed){
+      document.body.style.overflow = "hidden";
+    }else{
+      document.body.style.overflow = "auto";
+    }
+    
+  },[isCollapsed, isMobile]);
+
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-      <div className="d-flex row mx-0 h-100 nowrap overflow-hidden">
+      <div className="fixed-sidebar">
         <Sidebar
           isCollapsed={isCollapsed}
           toggle={() => {
@@ -77,25 +117,26 @@ function App() {
             isMobile && setIsCollapsed(true);
           }}
         />
-        <div className={`col d-flex bg-white route-wrapper px-0`}>
-          <Topbar
-            isCollapsed={isCollapsed}
-            toggle={() => {
-              setIsCollapsed(!isCollapsed);
-            }}
-          />
-          <CommonWrapper className="common-wrapper">
-            <Routes>
-              {userRoutes.map((route, index) => (
-                <Route
-                  path={route.path}
-                  key={index}
-                  element={route.component}
-                />
-              ))}
-            </Routes>
-          </CommonWrapper>
-        </div>
+      </div>
+      <Topbar
+        isCollapsed={isCollapsed}
+        toggle={() => {
+          setIsCollapsed(!isCollapsed);
+        }}
+      />
+
+      <div
+        className={`col d-flex bg-white route-wrapper ${
+          isCollapsed ? "main-ps-5rem" : "main-ps-20rem"
+        }`}
+      >
+        <CommonWrapper className="common-wrapper">
+          <Routes>
+            {userRoutes.map((route, index) => (
+              <Route path={route.path} key={index} element={route.component} />
+            ))}
+          </Routes>
+        </CommonWrapper>
       </div>
 
       <GlobalStyle />

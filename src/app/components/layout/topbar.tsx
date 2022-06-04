@@ -21,8 +21,8 @@ const Topbar: React.FC<Props> = ({
 }: Props) => {
   //   let location = useLocation();
   return (
-    <div className="d-flex w-100 abs-top-left topbar align-items-center">
-      <div className={`${isCollapsed ? "" : "menu"}`}>
+    <div className={`d-flex w-100 topbar align-items-center ${isCollapsed ? "ps-5rem" : "ps-20rem"}`}>
+      <div className={``}>
         <Hamburger toggled={!isCollapsed} toggle={toggle} />
       </div>
     </div>
