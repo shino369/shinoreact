@@ -1,6 +1,6 @@
 // import { Redirect } from 'react-router-dom';
 
-import { LazyDetail, LazyHome } from "app/pages";
+import { LazyAbout, LazyDetail, LazyHome } from "app/pages";
 
 interface Route {
   name: string;
@@ -10,8 +10,8 @@ interface Route {
   exact?: boolean;
 }
 const userRoutes: Route[] = [
-  { name: "home", group:'a', path: "/", component: <LazyHome /> },
-  { name: "detail", group:'a', path: "/detail", component: <LazyDetail /> },
+  { name: "home", group: '', path: "/", component: <LazyHome /> },
+  { name: "about me", group:'', path: "/about", component: <LazyAbout /> },
   { name: "detail 2", group:'b', path: "/detail2", component: <LazyDetail /> },
   { name: "detail 3", group:'b', path: "/detail3", component: <LazyDetail /> },
   { name: "detail 4", group:'c', path: "/detail4", component: <LazyDetail /> },
@@ -23,7 +23,7 @@ interface GroupRoutes {
 }
 
 const getGroupRoutes = () => {
-  const group:string[] = userRoutes.map((route) => (route.group)).filter((v, i, a) => a.indexOf(v) === i)
+  const group:string[] = userRoutes.filter(f=> f.group.length > 0).map((route) => (route.group)).filter((v, i, a) => a.indexOf(v) === i)
   const _groupRoutes:GroupRoutes = {}
   group.forEach((g:string) => {
     _groupRoutes[g] = userRoutes.filter((f:any)=> f.group===g)
