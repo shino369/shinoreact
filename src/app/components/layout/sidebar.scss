@@ -30,7 +30,7 @@
   --webkit-transition: all 0.2s ease-in-out;
   flex: 0 0 auto;
   height: 100%;
-
+  
   .accordion-button {
     @include typography(1.2rem, "semibold");
     background-color: transparent;
@@ -95,6 +95,11 @@
     background-color: white;
     height: 3.5rem;
   }
+}
+
+.sidebar-body {
+  height: calc(100% - 3.5rem);
+  overflow-y: scroll;
 }
 
 .show {
