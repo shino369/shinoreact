@@ -1,4 +1,4 @@
-@import 'theme/custom.scss';
+@import "theme/custom.scss";
 
 @media screen and (max-width: 768px) {
   .sidebar {
@@ -20,15 +20,10 @@
     }
   }
 
-  .side-menu{
+  .side-menu {
     display: none;
   }
 }
-
-
-
-  
-
 
 .sidebar {
   transition: all 0.2s ease-in-out;
@@ -36,19 +31,17 @@
   flex: 0 0 auto;
   height: 100%;
 
-
-
-  .accordion-button{
-    @include typography(1.2rem, 'semibold');
+  .accordion-button {
+    @include typography(1.2rem, "semibold");
     background-color: transparent;
     color: $text-primary;
     padding: 0;
-    &:focus{
+    &:focus {
       border: none;
       box-shadow: none;
     }
 
-    &::after{
+    &::after {
       filter: contrast(0.1);
     }
   }
@@ -58,47 +51,45 @@
     background-color: transparent;
     box-shadow: none;
 
-    &::after{
+    &::after {
       filter: grayscale(1) contrast(0.1);
     }
   }
 
-  .accordion-body{
+  .accordion-body {
     padding: 0;
   }
 
-  .accordion-item{
+  .accordion-item {
     background-color: transparent;
     border: none;
   }
 
-  .header { 
+  .header {
     transition: all 0.2s ease-in-out;
     --webkit-transition: all 0.2s ease-in-out;
   }
 
-  .label{
-    @include typography(1.2rem, 'semibold');
+  .label {
+    @include typography(1.2rem, "semibold");
     white-space: nowrap;
     color: $text-primary;
-    &:hover{
+    &:hover {
       background-color: rgba(255, 255, 255, 0.4);
     }
 
-    &.active{
+    &.active {
       background-color: rgba(255, 255, 255, 0.4);
     }
 
-    .label-text{
+    .label-text {
       transition: all 0.2s ease-in-out;
       --webkit-transition: all 0.2s ease-in-out;
     }
-
-
   }
 
-  .sidebar-header{
-    @include typography(1.5rem, 'semibold');
+  .sidebar-header {
+    @include typography(1.5rem, "semibold");
     color: $text-primary;
     color: black;
     background-color: white;
@@ -106,13 +97,28 @@
   }
 }
 
-
-.show{
+.show {
   opacity: 1;
   transform: translateX(0);
 }
 
-.hide{
+.hide {
   opacity: 0;
   transform: translateX(100%);
+}
+
+.outer-wrapper {
+  opacity: 0.5;
+}
+.wrapper {
+  position: relative;
+  font-family: Lato, sans-serif;
+  font-size: 0.75rem;
+  font-weight: bold;
+  // padding-left: 15vw;
+  overflow: hidden;
+}
+
+.wrapper .hello {
+  color: black;
 }

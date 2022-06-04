@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import "./sidebar.scss";
 import { groupRoutes, userRoutes } from "app/routes/routing";
 import { Accordion } from "react-bootstrap";
-import Hamburger from 'hamburger-react'
+import Hamburger from "hamburger-react";
+import { gsap } from "gsap";
+import { TextPlugin } from "gsap/all";
 
 export interface Props {
   className?: string;
@@ -21,6 +23,9 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
     )
   );
 
+  gsap.registerPlugin(TextPlugin);
+  const word: string[] = ["WELCOME", "I'M ANTHONY WONG", "A DEVELOPER"];
+
   React.useEffect(() => {
     setActiveRoute(location.pathname);
     // const route = userRoutes.filter(
@@ -29,6 +34,27 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
 
     // setDefaultActiveAccordion(Object.keys(groupRoutes).indexOf(route.group));
   }, [location]);
+
+  React.useEffect(() => {
+    const masterTl = gsap.timeline({ repeat: -1 }).pause();
+    gsap.to(".cursor", {
+      opacity: 0,
+      ease: "power2.inOut",
+      repeat: -1,
+    });
+
+    word.forEach((word: string) => {
+      let tl = gsap.timeline({ repeat: 1, yoyo: true, repeatDelay: 1 });
+      tl.to(".typing", {
+        duration: 1,
+        text: word,
+        onComplete: () => {},
+      });
+      masterTl.add(tl);
+    });
+
+    masterTl.play();
+  }, []);
 
   return (
     <div
@@ -42,8 +68,26 @@ const Sidebar: React.FC<Props> = ({ className, toggle, isCollapsed }) => {
         } py-2`}
       >
         <div className="sidebar-header-logo"></div>
-        <div className={`d-flex w-100 header align-items-center justify-content-between  ${isCollapsed ? "hide" : "show"}`}>sidebar
-        <div className="side-menu"><Hamburger toggled={!isCollapsed} toggle={toggle} /></div>
+        <div
+          className={`d-flex w-100 header align-items-center justify-content-between  ${
+            isCollapsed ? "hide" : "show"
+          }`}
+        >
+          <div className="outer-wrapper d-flex">
+            <div className="wrapper">
+              <span className="box"></span>
+              <span className="hello">shinoreact: ~$</span>
+            </div>
+            <div className="wrapper wrapper-2 ms-2">
+              <div>
+                <span className="typing"></span>
+                <span className="cursor">_</span>
+              </div>
+            </div>
+          </div>
+          <div className="side-menu">
+            <Hamburger toggled={!isCollapsed} toggle={toggle} />
+          </div>
         </div>
       </div>
       <div className={`sidebar-body`}>
