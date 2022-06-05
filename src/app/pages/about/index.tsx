@@ -216,19 +216,21 @@ export const AboutPage = () => {
       ))}
 
       {loading ? (
-        <ContentLoader
-          speed={2}
-          width={400}
-          height={150}
-          viewBox="0 0 400 150"
-          backgroundColor="#f3f3f3"
-          foregroundColor="#ecebeb"
-        >
-          <rect x="0" y="15" rx="5" ry="5" width="300" height="10" />
-          <rect x="0" y="45" rx="5" ry="5" width="220" height="10" />
-          <rect x="0" y="75" rx="5" ry="5" width="220" height="10" />
-          <rect x="0" y="105" rx="5" ry="5" width="300" height="10" />
-        </ContentLoader>
+        <div>
+          <ContentLoader
+            speed={2}
+            width={400}
+            height={150}
+            viewBox="0 0 400 150"
+            backgroundColor="#f3f3f3"
+            foregroundColor="#ecebeb"
+          >
+            <rect x="0" y="15" rx="5" ry="5" width="300" height="10" />
+            <rect x="0" y="45" rx="5" ry="5" width="220" height="10" />
+            <rect x="0" y="75" rx="5" ry="5" width="220" height="10" />
+            <rect x="0" y="105" rx="5" ry="5" width="300" height="10" />
+          </ContentLoader>
+        </div>
       ) : (
         selectedProject?.map((item: any, index: number) => {
           return (
