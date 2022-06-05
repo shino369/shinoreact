@@ -7,6 +7,7 @@ import { Accordion } from "react-bootstrap";
 import Hamburger from "hamburger-react";
 import { gsap } from "gsap";
 import { TextPlugin } from "gsap/all";
+import Icon from "../icon/icon";
 
 export interface Props {
   className?: string;
@@ -44,7 +45,7 @@ const Sidebar: React.FC<Props> = ({
 
   React.useEffect(() => {
     const masterTl = gsap.timeline({ repeat: -1 }).pause();
-    gsap.to(".cursor", {
+    const typing = gsap.to(".cursor", {
       opacity: 0,
       ease: "power2.inOut",
       repeat: -1,
@@ -61,6 +62,11 @@ const Sidebar: React.FC<Props> = ({
     });
 
     masterTl.play();
+
+    return () => {
+      masterTl.kill();
+      typing.kill();
+    };
   }, []);
 
   return (
@@ -97,7 +103,7 @@ const Sidebar: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      <div className={`sidebar-body`}>
+      <div className={`sidebar-body hideScroll`}>
         <div className="sidebar-body-item d-flex flex-column j  ustify-content-start">
           {userRoutes
             .filter((f) => f.group.length === 0)
@@ -112,9 +118,22 @@ const Sidebar: React.FC<Props> = ({
                 <div
                   className={`${isCollapsed ? "px-1" : "px-4"} ${
                     activeRoute === route.path ? "active" : ""
-                  } label text-uppercase py-3`}
+                  } label text-uppercase py-3 d-flex align-items-center position-relative`}
                 >
                   <div
+                    className={`position-absolute d-flex justify-content-center transition ${
+                      isCollapsed ? "opacity-1" : "opacity-0"
+                    }`}
+                    style={{
+                      transform: `translateX(${isCollapsed ? "0" : "-10px"})`,
+                      width: `calc(100% - ${isCollapsed ? "0.5rem" : "3rem"})`,
+                    }}
+                  >
+                    <Icon svg name={route.icon} size={24} color={"white"} />
+                  </div>
+
+                  <div
+
                     className={`${isCollapsed ? "hide" : "show"} label-text`}
                   >
                     {route.name}
@@ -136,11 +155,16 @@ const Sidebar: React.FC<Props> = ({
                 eventKey={index.toString()}
               >
                 <Accordion.Header
-                  className={`${isCollapsed ? "px-1" : "px-4"}  py-3`}
+                  className={`${isCollapsed ? "px-1" : "px-4"}  py-3 position-relative`}
                 >
                   <div className={`header ${isCollapsed ? "hide" : "show"}`}>
-                    {group}
+                    {isCollapsed ? '': group}
                   </div>
+                  {isCollapsed && (
+                    <div className={`header position-absolute w-100 text-center transition ${isCollapsed ? "opacity-1" : "opacity-0"}`}>
+                      {group[0]}
+                    </div>
+                  )}
                 </Accordion.Header>
                 <Accordion.Body>
                   {groupRoutes[group].map((route, i) => (

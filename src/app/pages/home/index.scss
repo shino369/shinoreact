@@ -27,3 +27,12 @@ p {
   @include typography(1rem, 'regular');
   opacity: 0.5;
 }
+
+.scale-1-5{
+  transform: scale(1.5);
+}
+
+.bubble{
+  height: fit-content;
+  width: 6rem;
+}

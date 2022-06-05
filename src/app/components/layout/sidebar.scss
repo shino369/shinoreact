@@ -1,6 +1,6 @@
 @import "theme/custom.scss";
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 576px) {
   .sidebar {
     &.collapsed {
       width: 0vw;
@@ -10,7 +10,7 @@
     }
   }
 }
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 576px) {
   .sidebar {
     &.collapsed {
       width: 5rem;

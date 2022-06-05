@@ -3,8 +3,9 @@ import Hamburger from "hamburger-react";
 // style
 import "./topbar.scss";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useRoutes } from "react-router-dom";
 import React from "react";
+import { userRoutes } from "app/routes/routing";
 
 export interface Props {
   className?: string;
@@ -19,12 +20,27 @@ const Topbar: React.FC<Props> = ({
   isCollapsed,
   toggle,
 }: Props) => {
-  //   let location = useLocation();
+  let location = useLocation();
+  const [recent, setRecent] = React.useState<string>();
+
+  useEffect(() => {
+    setRecent(
+      userRoutes
+        .filter((route) => route.path === location.pathname)[0]
+        .name.toUpperCase()
+    );
+  }, [location]);
+
   return (
-    <div className={`d-flex w-100 topbar align-items-center ${isCollapsed ? "ps-5rem" : "ps-20rem"}`}>
+    <div
+      className={`d-flex w-100 topbar align-items-center ${
+        isCollapsed ? "ps-5rem" : "ps-20rem"
+      }`}
+    >
       <div className={``}>
         <Hamburger toggled={!isCollapsed} toggle={toggle} />
       </div>
+      <div className="ms-2">{recent}</div>
     </div>
   );
 };

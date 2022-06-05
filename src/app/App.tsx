@@ -75,7 +75,7 @@ export const GlobalStyle = createGlobalStyle`
     // height: 100vh;
     // overflow-y: scroll;
   }
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 576px) {
     .main-ps-5rem{
         padding-left: 5rem;
     }
@@ -89,7 +89,7 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  const isMobile = useMediaQuery({ query: `(max-width: 768px)` });
+  const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
   const [isCollapsed, setIsCollapsed] = React.useState(isMobile ? true : false);
 
   useEffect(() => {
