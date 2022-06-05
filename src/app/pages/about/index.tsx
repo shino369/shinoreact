@@ -11,7 +11,7 @@ const techstach: any = {
   frameworks: [
     "react (hook)",
     "react native",
-    "angular 2+",
+    "angular",
     "springboot",
     "J2EE(Servlet)",
     "mybatis plus",
