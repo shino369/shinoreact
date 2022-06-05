@@ -91,7 +91,8 @@ export const GlobalStyle = createGlobalStyle`
 
 function App() {
   const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
-  const [isCollapsed, setIsCollapsed] = React.useState(isMobile ? true : false);
+  const isIpad = useMediaQuery({ query: `(min-width: 576px) and (max-width: 768px)` });
+  const [isCollapsed, setIsCollapsed] = React.useState(isMobile || isIpad ? true : false);
 
   useEffect(() => {
     console.log(isMobile);
