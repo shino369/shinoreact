@@ -1,24 +1,5 @@
 @import "theme/custom.scss";
 
-.page-header {
-  @include typography(3rem, 'semibold');
-}
-
-p {
-    @include typography(1.2rem, 'regular');
-}
-
-.remark{
-  opacity: 0.7;
-  // text italic
-  font-style: italic;
-}
-
-.opactiy-5{
-  @include typography(1rem, 'regular');
-  opacity: 0.5;
-}
-
 .scale-1-5{
   transform: scale(1.5);
 }
