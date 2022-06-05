@@ -3,9 +3,13 @@
 @import "~bootstrap/scss/bootstrap";
 @import "./typology.scss";
 
+// import highlight.js
+@import "~highlight.js/styles/github-dark.css";
+
 $theme-colors: (
   "primary": $primary,
   "secondary": $secondary,
+  "dark" : $code, 
   "success": $app-success,
   "danger": $app-danger,
   "warning": $app-warning,
@@ -121,3 +125,21 @@ body {
 .opacity-1 {
   opacity: 1;
 }
+
+.bg-code {
+  background-color: $code;
+}
+
+
+@media screen and (max-width: 576px) {
+  .code-max-width {
+    max-width: 90vw;
+  }
+}
+  
+@media screen and (min-width: 576px) {
+  .code-max-width {
+    max-width: 50vw;
+  }
+}
+

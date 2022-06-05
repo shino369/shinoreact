@@ -71,6 +71,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .common-wrapper{
     flex-grow: 1;
+    width: 100%;
     padding-top: 3.5rem;
     // height: 100vh;
     // overflow-y: scroll;
