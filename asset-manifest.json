@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/shinoreact/static/css/main.27a25340.css",
-    "main.js": "/shinoreact/static/js/main.e9fd4645.js",
+    "main.js": "/shinoreact/static/js/main.f2c7e387.js",
     "static/css/841.a942e30a.chunk.css": "/shinoreact/static/css/841.a942e30a.chunk.css",
-    "static/js/841.7610e37f.chunk.js": "/shinoreact/static/js/841.7610e37f.chunk.js",
+    "static/js/841.1468a7c1.chunk.js": "/shinoreact/static/js/841.1468a7c1.chunk.js",
     "static/css/877.f677b7c4.chunk.css": "/shinoreact/static/css/877.f677b7c4.chunk.css",
     "static/js/877.21299aad.chunk.js": "/shinoreact/static/js/877.21299aad.chunk.js",
     "static/js/270.e5cf1985.chunk.js": "/shinoreact/static/js/270.e5cf1985.chunk.js",
@@ -16,9 +16,9 @@
     "static/media/house-fill.svg": "/shinoreact/static/media/house-fill.672c9a9eeb99bd20c1be8617f848835c.svg",
     "static/media/chat-square-dots-fill.svg": "/shinoreact/static/media/chat-square-dots-fill.bb2914af02c62cb92f63bba98e8ff3b3.svg",
     "main.27a25340.css.map": "/shinoreact/static/css/main.27a25340.css.map",
-    "main.e9fd4645.js.map": "/shinoreact/static/js/main.e9fd4645.js.map",
+    "main.f2c7e387.js.map": "/shinoreact/static/js/main.f2c7e387.js.map",
     "841.a942e30a.chunk.css.map": "/shinoreact/static/css/841.a942e30a.chunk.css.map",
-    "841.7610e37f.chunk.js.map": "/shinoreact/static/js/841.7610e37f.chunk.js.map",
+    "841.1468a7c1.chunk.js.map": "/shinoreact/static/js/841.1468a7c1.chunk.js.map",
     "877.f677b7c4.chunk.css.map": "/shinoreact/static/css/877.f677b7c4.chunk.css.map",
     "877.21299aad.chunk.js.map": "/shinoreact/static/js/877.21299aad.chunk.js.map",
     "270.e5cf1985.chunk.js.map": "/shinoreact/static/js/270.e5cf1985.chunk.js.map",
@@ -27,6 +27,6 @@
   },
   "entrypoints": [
     "static/css/main.27a25340.css",
-    "static/js/main.e9fd4645.js"
+    "static/js/main.f2c7e387.js"
   ]
 }
