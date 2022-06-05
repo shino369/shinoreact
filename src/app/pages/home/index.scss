@@ -8,15 +8,6 @@ p {
     @include typography(1.2rem, 'regular');
 }
 
-.high-light {
-    background-color: lightgray;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-    margin-right: 0.1rem;
-}
-
 .remark{
   opacity: 0.7;
   // text italic
