@@ -24,9 +24,15 @@ const Topbar: React.FC<Props> = ({
   const [recent, setRecent] = React.useState<string>();
 
   useEffect(() => {
+    const paths = location.pathname.split('/')
+    // check if last is a number and change to :id
+    if (paths[paths.length - 1].match(/^\d+$/)) {
+      paths[paths.length - 1] = `:id`
+    }
+
     setRecent(
       userRoutes
-        .filter((route) => route.path === location.pathname)[0]
+        .filter((route) => route.path === paths.join('/'))[0]
         .name.toUpperCase()
     );
   }, [location]);
@@ -40,7 +46,7 @@ const Topbar: React.FC<Props> = ({
       <div className={``}>
         <Hamburger toggled={!isCollapsed} toggle={toggle} />
       </div>
-      <div className="ms-2">{recent}</div>
+      <div className="current ms-2">{recent}</div>
     </div>
   );
 };

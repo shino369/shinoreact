@@ -1,0 +1,91 @@
+@import "theme/custom.scss";
+
+@media screen and (min-width: 992px) {
+  .left {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 4rem;
+    cursor: pointer;
+    background-color: rgba($primary, 0.5);
+    .inner {
+      transform: scaleX(0.6);
+    }
+  }
+
+  .right {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 4rem;
+    cursor: pointer;
+    background-color: rgba($primary, 0.5);
+    .inner {
+      transform: scaleX(0.6);
+    }
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .left {
+    display: none;
+    .inner {
+      display: none;
+    }
+  }
+
+  .right {
+    display: none;
+    .inner {
+      display: none;
+    }
+  }
+}
+
+.left {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 4rem;
+  cursor: pointer;
+  background-color: rgba($primary, 0.5);
+  .inner {
+    transform: scaleX(0.6);
+  }
+}
+
+.right {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 4rem;
+  cursor: pointer;
+  background-color: rgba($primary, 0.5);
+  .inner {
+    transform: scaleX(0.6);
+  }
+}
+
+.indicator {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  transition: all 0.2s ease-in-out;
+  --webkit-transition: all 0.2s ease-in-out;
+  .inner {
+    background-color: rgba($primary, 0.5);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}

@@ -1,7 +1,7 @@
 // import { Redirect } from 'react-router-dom';
 
-import { LazyAbout, LazyDetail, LazyHome } from "app/pages";
-
+import { LazyAbout, LazyDetail, LazyHome, LazyProjectDetail } from "app/pages";
+import { Navigate  } from 'react-router-dom';
 interface Route {
   name: string;
   icon: string;
@@ -9,6 +9,7 @@ interface Route {
   path: string;
   component: any;
   exact?: boolean;
+  children?: Route[];
 }
 const userRoutes: Route[] = [
   { name: "home", icon: "house-fill", group: "", path: "/", component: <LazyHome /> },
@@ -20,11 +21,11 @@ const userRoutes: Route[] = [
     component: <LazyAbout />,
   },
   {
-    name: "detail 2",
+    name: "Project Detail",
     icon: "",
-    group: "Protected",
-    path: "/detail2",
-    component: <LazyDetail />,
+    group: "hidden",
+    path: "/project/:id",
+    component: <LazyProjectDetail />,
   },
   {
     name: "detail 3",
@@ -46,6 +47,15 @@ const userRoutes: Route[] = [
     group: "c",
     path: "/detail5",
     component: <LazyDetail />,
+  },
+
+  // 404
+  {
+    name: "404",
+    icon: "",
+    group: "hidden",
+    path: '*',
+    component: <Navigate to="/" replace={true} />,
   },
 ];
 

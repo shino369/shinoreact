@@ -26,7 +26,7 @@ const Sidebar: React.FC<Props> = ({
   const [activeRoute, setActiveRoute] = React.useState(location.pathname);
   const [defaultActiveAccordion, setDefaultActiveAccordion] = React.useState(
     Object.keys(groupRoutes).indexOf(
-      userRoutes.filter((route) => route.path === location.pathname)[0].group
+      userRoutes.filter((route) => route.path === location.pathname)[0]?.group
     )
   );
 
@@ -146,7 +146,7 @@ const Sidebar: React.FC<Props> = ({
             flush
             alwaysOpen
           >
-            {Object.keys(groupRoutes).map((group, index) => (
+            {Object.keys(groupRoutes).filter(key=> key!=="hidden").map((group, index) => (
               <Accordion.Item
                 key={index}
                 className={`border-bottom-light ${

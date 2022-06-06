@@ -86,6 +86,12 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
     
+  .carousel .control-next.control-arrow:before {
+    border-left: 8px solid #000 !important;
+  }
+  .carousel .control-prev.control-arrow:before {
+    border-right: 8px solid #000 !important;
+  }
 
 `;
 
@@ -135,7 +141,13 @@ function App() {
         <CommonWrapper className="common-wrapper">
           <Routes>
             {userRoutes.map((route, index) => (
-              <Route path={route.path} key={index} element={route.component} />
+              <Route path={route.path} key={index} element={route.component}>
+                {route.children && (
+                  route.children.map((child, index) => (
+                    <Route path={child.path} key={index} element={child.component} />
+                  ))
+                )}
+              </Route>
             ))}
           </Routes>
         </CommonWrapper>

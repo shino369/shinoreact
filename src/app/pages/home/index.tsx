@@ -11,7 +11,7 @@ export const HomePage = () => {
     const [bar, setBar] = useState<string>('foo');
     return bar;
 
-    // the text animation this page makes use of gsap
+    // the text animation makes use of gsap
   }
   `;
 
