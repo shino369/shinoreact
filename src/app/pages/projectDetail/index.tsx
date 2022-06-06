@@ -63,7 +63,7 @@ export const ProjectDetailPage = () => {
             </div>
             {project.images.length > 0 && (
               <div
-                className="position-relative"
+                className={styles.carobg}
                 style={{ maxHeight: "400px", maxWidth: "800px" }}
               >
                 <div>
