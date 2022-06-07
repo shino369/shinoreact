@@ -1,11 +1,11 @@
 {
   "files": {
     "main.css": "/shinoreact/static/css/main.6ba154a1.css",
-    "main.js": "/shinoreact/static/js/main.ef66a0d2.js",
+    "main.js": "/shinoreact/static/js/main.359b7b4e.js",
     "static/css/841.a942e30a.chunk.css": "/shinoreact/static/css/841.a942e30a.chunk.css",
     "static/js/841.88fd1277.chunk.js": "/shinoreact/static/js/841.88fd1277.chunk.js",
     "static/css/877.62fab1a7.chunk.css": "/shinoreact/static/css/877.62fab1a7.chunk.css",
-    "static/js/877.a905e68f.chunk.js": "/shinoreact/static/js/877.a905e68f.chunk.js",
+    "static/js/877.a8d66c12.chunk.js": "/shinoreact/static/js/877.a8d66c12.chunk.js",
     "static/js/270.5e97a16e.chunk.js": "/shinoreact/static/js/270.5e97a16e.chunk.js",
     "static/css/956.8ce31d71.chunk.css": "/shinoreact/static/css/956.8ce31d71.chunk.css",
     "static/js/956.7661dcf4.chunk.js": "/shinoreact/static/js/956.7661dcf4.chunk.js",
@@ -31,11 +31,11 @@
     "static/media/house-fill.svg": "/shinoreact/static/media/house-fill.672c9a9eeb99bd20c1be8617f848835c.svg",
     "static/media/chat-square-dots-fill.svg": "/shinoreact/static/media/chat-square-dots-fill.bb2914af02c62cb92f63bba98e8ff3b3.svg",
     "main.6ba154a1.css.map": "/shinoreact/static/css/main.6ba154a1.css.map",
-    "main.ef66a0d2.js.map": "/shinoreact/static/js/main.ef66a0d2.js.map",
+    "main.359b7b4e.js.map": "/shinoreact/static/js/main.359b7b4e.js.map",
     "841.a942e30a.chunk.css.map": "/shinoreact/static/css/841.a942e30a.chunk.css.map",
     "841.88fd1277.chunk.js.map": "/shinoreact/static/js/841.88fd1277.chunk.js.map",
     "877.62fab1a7.chunk.css.map": "/shinoreact/static/css/877.62fab1a7.chunk.css.map",
-    "877.a905e68f.chunk.js.map": "/shinoreact/static/js/877.a905e68f.chunk.js.map",
+    "877.a8d66c12.chunk.js.map": "/shinoreact/static/js/877.a8d66c12.chunk.js.map",
     "270.5e97a16e.chunk.js.map": "/shinoreact/static/js/270.5e97a16e.chunk.js.map",
     "956.8ce31d71.chunk.css.map": "/shinoreact/static/css/956.8ce31d71.chunk.css.map",
     "956.7661dcf4.chunk.js.map": "/shinoreact/static/js/956.7661dcf4.chunk.js.map",
@@ -46,6 +46,6 @@
   },
   "entrypoints": [
     "static/css/main.6ba154a1.css",
-    "static/js/main.ef66a0d2.js"
+    "static/js/main.359b7b4e.js"
   ]
 }
