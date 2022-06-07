@@ -8,34 +8,95 @@ import ContentLoader from "react-content-loader";
 import { Categories, projectDetail, ProjectDetail, techstach } from "app/model";
 import { useDispatch } from "react-redux";
 import { setActiveRoute } from "store/activeRoute";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/all";
 
 export const AboutPage = () => {
   useAnimation();
   const [selectedStack, setSelectedStack] = useState<string[]>([]);
   const [selectedProject, setSelectedProject] =
     useState<ProjectDetail[]>(projectDetail);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   // const { activeRoute } = useSelector((rootState: RootState) => rootState.activeRoute)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setActiveRoute('about me'))
-  },[dispatch])
+    dispatch(setActiveRoute("about me"));
+  }, [dispatch]);
 
   useEffect(() => {
+    console.log('called')
     setLoading(true);
     setTimeout(() => {
-      setSelectedProject(
-        selectedStack.length === 0
-          ? projectDetail
-          : projectDetail.filter((f) =>
-              f.techStack.some((s: any) => selectedStack.includes(s))
-            )
-      );
+      if (selectedStack.length > 0) {
+        setSelectedProject(
+          selectedStack.length === 0
+            ? projectDetail
+            : projectDetail.filter((f) =>
+                f.techStack.some((s: any) => selectedStack.includes(s))
+              )
+        );
+      }else{
+        setSelectedProject(projectDetail);
+      }
       setLoading(false);
-    }, 1000);
+    }, 600);
   }, [selectedStack]);
+
+  useEffect(() => {
+    gsap.killTweensOf(".result");
+    const animateFrom = (elem: any, _direction?: number) => {
+      const direction = _direction || 1;
+      var x = 0,
+        y = direction * 1000;
+      if (elem.classList.contains("result_fromLeft")) {
+        x = -100;
+        y = 0;
+      } else if (elem.classList.contains("result_fromRight")) {
+        x = 100;
+        y = 0;
+      }
+      elem.style.transform = "translate(" + x + "px, " + y + "px)";
+      elem.style.opacity = "0";
+      gsap.fromTo(
+        elem,
+        { x: x, y: y, autoAlpha: 0 },
+        {
+          duration: 1.25,
+          x: 0,
+          y: 0,
+          autoAlpha: 1,
+          ease: "expo",
+          overwrite: "auto",
+        }
+      );
+    };
+
+    const hide = (elem: any) => {
+      gsap.set(elem, { autoAlpha: 0 });
+    };
+
+    gsap.utils.toArray(".result").forEach((elem: any) => {
+      hide(elem); // assure that the element is hidden when scrolled into view
+
+      ScrollTrigger.create({
+        once: true,
+        trigger: elem,
+        onEnter: () => {
+          animateFrom(elem);
+        },
+        // onEnterBack: () => {
+        //   animateFrom(elem, -1)
+        // },
+        // onLeave: () => {
+        //   hide(elem)
+        // }, // assure that the element is hidden when scrolled into view
+      });
+    });
+
+    return () => gsap.killTweensOf(".result");
+  }, [selectedProject]);
 
   return (
     <div className="p-4 position-relative">
@@ -95,7 +156,6 @@ export const AboutPage = () => {
         } badge rounded-pill py-2 px-3 mx-1 my-1 text-capitalize unselectable pointer hover-opacity border`}
         onClick={() => {
           setSelectedStack([]);
-          setSelectedProject(projectDetail);
           console.log(selectedStack);
           console.log(selectedProject);
         }}
@@ -138,7 +198,7 @@ export const AboutPage = () => {
 
       <hr />
 
-      <div>
+      <div className="overflow-hidden px-2 gs_reveal">
         <p className="label">Commercial Projects Participated:</p>
         {selectedStack.map((s: any, index: number) => (
           <div
@@ -157,30 +217,30 @@ export const AboutPage = () => {
           <div>
             <ContentLoader
               speed={2}
-              width={400}
+              width={300}
               height={150}
               viewBox="0 0 400 150"
               backgroundColor="#f3f3f3"
               foregroundColor="#ecebeb"
             >
-              <rect x="0" y="15" rx="5" ry="5" width="300" height="10" />
-              <rect x="0" y="45" rx="5" ry="5" width="220" height="10" />
-              <rect x="0" y="75" rx="5" ry="5" width="220" height="10" />
-              <rect x="0" y="105" rx="5" ry="5" width="300" height="10" />
+              <rect x="0" y="15" rx="5" ry="5" width="280" height="10" />
+              <rect x="0" y="45" rx="5" ry="5" width="180" height="10" />
+              <rect x="0" y="75" rx="5" ry="5" width="180" height="10" />
+              <rect x="0" y="105" rx="5" ry="5" width="200" height="10" />
             </ContentLoader>
           </div>
         ) : (
           selectedProject?.map((item: ProjectDetail, index: number) => {
             return (
               <div
-                className="hover-opacity project-item pointer px-2 mb-4 shadow"
+                className="hover-opacity project-item pointer text-white p-4 mb-4 shadow result result_fromRight"
                 onClick={() => {
                   navigate(`/project/${item.id}`);
                 }}
                 key={index}
               >
                 <div className="d-flex">
-                  <div className="d-none d-sm-block my-2 col-2 me-2">
+                  <div className="d-none align-items-center d-sm-flex my-2 col-2 me-2">
                     <img
                       src={item.icon}
                       alt=""
@@ -190,7 +250,7 @@ export const AboutPage = () => {
                     />
                   </div>
                   <div className="my-2 col overflow-hidden">
-                    <div className="d-flex d-sm-none my-2 justify-content-center">
+                    <div className="d-flex d-sm-none mb-4 justify-content-center">
                       <img src={item.icon} alt="" width="200px" height="auto" />
                     </div>
                     <div className="mb-2">

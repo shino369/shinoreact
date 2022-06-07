@@ -1,7 +1,7 @@
 export const techstach: TechStack = {
   languages: ["typescript", "javascript", "java", "c++"],
   frameworks: [
-    "react (hook)",
+    "react",
     "react native",
     "angular",
     "springboot",

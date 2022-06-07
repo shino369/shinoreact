@@ -4,6 +4,7 @@ import { ReactComponent as HouseFill } from "app/assets/icons/house-fill.svg";
 import { ReactComponent as ChatFill } from "app/assets/icons/chat-square-dots-fill.svg";
 import { ReactComponent as Chat } from "app/assets/icons/chat-square-dots.svg";
 
+
 export interface Props {
   name: string;
   color: string;
@@ -12,6 +13,7 @@ export interface Props {
   btnClassName?: string;
   iconClassName?: string;
   svg?: boolean;
+  extname?: string;
   onClick?: () => void;
 }
 
@@ -23,6 +25,7 @@ const Icon: React.FC<Props> = ({
   button,
   btnClassName,
   svg,
+  extname = 'svg',
   onClick,
 }) => {
   // use img to export svg
@@ -32,7 +35,7 @@ const Icon: React.FC<Props> = ({
       return (
         <button className={`${btnClassName} btn`} onClick={onClick}>
           <img
-            src={require(`app/assets/icons/${name}.svg`)}
+            src={require(`app/assets/icons/${name}.${extname}`)}
             alt={name}
             width={size}
             height={size}
@@ -43,7 +46,7 @@ const Icon: React.FC<Props> = ({
     }
     return (
       <img
-        src={require(`app/assets/icons/${name}.svg`)}
+        src={require(`app/assets/icons/${name}.${extname}`)}
         width={size}
         height={size}
         alt={name}

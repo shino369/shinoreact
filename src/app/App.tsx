@@ -93,6 +93,12 @@ export const GlobalStyle = createGlobalStyle`
     border-right: 8px solid #000 !important;
   }
 
+  .hover-opacity {
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
 `;
 
 function App() {

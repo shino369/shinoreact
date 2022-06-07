@@ -14,7 +14,16 @@ export const LoginPage = () => {
   }, [dispatch]);
   return (
     <div className="p-4 d-flex flex-column justify-content-center align-items-center">
-
+        <p
+          className="remark"
+          style={{
+            fontSize: "0.8rem",
+          }}
+        >
+          {
+            "( Not implemented yet )"
+          }
+        </p>
       <Form onSubmit={()=>{}} className="border shadow rounded p-4">
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Text className="text-muted">

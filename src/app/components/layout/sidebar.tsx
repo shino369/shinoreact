@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 // import { Link } from "react-router-dom";
 import "./sidebar.scss";
@@ -27,19 +27,24 @@ const Sidebar: React.FC<Props> = ({
   // let location = useLocation();
   // const [activeRoute, setActiveRoute] = React.useState(location.pathname);
 
-
   gsap.registerPlugin(TextPlugin);
   const word: string[] = ["WELCOME", "I'M ANTHONY WONG", "A DEVELOPER"];
 
-  const { activeRoute } = useSelector((rootState: RootState) => rootState.activeRoute)
-  const [defaultActiveAccordion] = React.useState(
+  const { activeRoute } = useSelector(
+    (rootState: RootState) => rootState.activeRoute
+  );
+  const [defaultActiveAccordion] = useState(
     Object.keys(groupRoutes).indexOf(
       userRoutes.filter((route) => route.name === activeRoute)[0]?.group
     )
   );
 
+  useEffect(() => {
+    console.log(activeRoute);
+    close();
+  }, [activeRoute]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const masterTl = gsap.timeline({ repeat: -1 }).pause();
     const typing = gsap.to(".cursor", {
       opacity: 0,
@@ -63,14 +68,14 @@ const Sidebar: React.FC<Props> = ({
       masterTl.kill();
       typing.kill();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div
       className={`${
         isCollapsed ? "collapsed" : "expanded"
-      } bg-primary sidebar px-0`}
+      } bg-primary sidebar px-0 d-flex flex-column`}
     >
       <div
         className={`sidebar-header border-right d-flex justify-content-start ${
@@ -130,7 +135,6 @@ const Sidebar: React.FC<Props> = ({
                   </div>
 
                   <div
-
                     className={`${isCollapsed ? "hide" : "show"} label-text`}
                   >
                     {route.name}
@@ -143,53 +147,61 @@ const Sidebar: React.FC<Props> = ({
             flush
             alwaysOpen
           >
-            {Object.keys(groupRoutes).filter(key=> key!=="hidden").map((group, index) => (
-              <Accordion.Item
-                key={index}
-                className={`border-bottom-light ${
-                  index === 0 ? "border-top-light" : ""
-                }`}
-                eventKey={index.toString()}
-              >
-                <Accordion.Header
-                  className={`${isCollapsed ? "px-1" : "px-4"}  py-3 position-relative`}
+            {Object.keys(groupRoutes)
+              .filter((key) => key !== "hidden")
+              .map((group, index) => (
+                <Accordion.Item
+                  key={index}
+                  className={`border-bottom-light ${
+                    index === 0 ? "border-top-light" : ""
+                  }`}
+                  eventKey={index.toString()}
                 >
-                  <div className={`header ${isCollapsed ? "hide" : "show"}`}>
-                    {isCollapsed ? '': group.toUpperCase()}
-                  </div>
-                  {isCollapsed && (
-                    <div className={`header position-absolute w-100 text-center transition ${isCollapsed ? "opacity-1" : "opacity-0"}`}>
-                      {group[0]}
+                  <Accordion.Header
+                    className={`${
+                      isCollapsed ? "px-1" : "px-4"
+                    }  py-3 position-relative`}
+                  >
+                    <div className={`header ${isCollapsed ? "hide" : "show"}`}>
+                      {isCollapsed ? "" : group.toUpperCase()}
                     </div>
-                  )}
-                </Accordion.Header>
-                <Accordion.Body>
-                  {groupRoutes[group].map((route, i) => (
-                    <NavLink
-                      key={i}
-                      style={{
-                        textDecoration: "none",
-                      }}
-                      to={route.path}
-                    >
+                    {isCollapsed && (
                       <div
-                        className={`${isCollapsed ? "px-1" : "px-4"} ${
-                          activeRoute === route.name ? "active" : ""
-                        } label text-uppercase py-3`}
+                        className={`header position-absolute w-100 text-center transition ${
+                          isCollapsed ? "opacity-1" : "opacity-0"
+                        }`}
+                      >
+                        {group[0]}
+                      </div>
+                    )}
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    {groupRoutes[group].map((route, i) => (
+                      <NavLink
+                        key={i}
+                        style={{
+                          textDecoration: "none",
+                        }}
+                        to={route.path}
                       >
                         <div
-                          className={`${
-                            isCollapsed ? "hide" : "show"
-                          } label-text`}
+                          className={`${isCollapsed ? "px-1" : "px-4"} ${
+                            activeRoute === route.name ? "active" : ""
+                          } label text-uppercase py-3`}
                         >
-                          {route.name}
+                          <div
+                            className={`${
+                              isCollapsed ? "hide" : "show"
+                            } label-text`}
+                          >
+                            {route.name}
+                          </div>
                         </div>
-                      </div>
-                    </NavLink>
-                  ))}
-                </Accordion.Body>
-              </Accordion.Item>
-            ))}
+                      </NavLink>
+                    ))}
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))}
           </Accordion>
         </div>
       </div>
