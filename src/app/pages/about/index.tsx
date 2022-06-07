@@ -26,7 +26,7 @@ export const AboutPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('called')
+    // console.log('called')
     setLoading(true);
     setTimeout(() => {
       if (selectedStack.length > 0) {
@@ -58,15 +58,15 @@ export const AboutPage = () => {
         y = 0;
       }
       elem.style.transform = "translate(" + x + "px, " + y + "px)";
-      elem.style.opacity = "0";
+      // elem.style.opacity = "0";
       gsap.fromTo(
         elem,
-        { x: x, y: y, autoAlpha: 0 },
+        { x: x, y: y,  },
         {
           duration: 1.25,
           x: 0,
           y: 0,
-          autoAlpha: 1,
+        
           ease: "expo",
           overwrite: "auto",
         }
@@ -74,7 +74,7 @@ export const AboutPage = () => {
     };
 
     const hide = (elem: any) => {
-      gsap.set(elem, { autoAlpha: 0 });
+      gsap.set(elem, { });
     };
 
     gsap.utils.toArray(".result").forEach((elem: any) => {
@@ -156,8 +156,8 @@ export const AboutPage = () => {
         } badge rounded-pill py-2 px-3 mx-1 my-1 text-capitalize unselectable pointer hover-opacity border`}
         onClick={() => {
           setSelectedStack([]);
-          console.log(selectedStack);
-          console.log(selectedProject);
+          // console.log(selectedStack);
+          // console.log(selectedProject);
         }}
       >
         {"All"}
