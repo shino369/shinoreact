@@ -2,17 +2,24 @@
 import styles from "./index.module.scss";
 
 import { Link, useLocation } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ProjectDetail, projectDetail } from "app/model";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
+import { useDispatch } from "react-redux";
+import { setActiveRoute } from "store/activeRoute";
 
 export const ProjectDetailPage = () => {
   const location = useLocation();
   const paths = location.pathname.split("/");
-  const [id, setId] = useState<number>(parseInt(paths[paths.length - 1]));
+  const [id] = useState<number>(parseInt(paths[paths.length - 1]));
   const [project, setProject] = useState<ProjectDetail | undefined>(undefined);
-  const scrollRef = useRef<any>(null);
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setActiveRoute('project detail'))
+  },[dispatch])
 
   useEffect(() => {
     setProject(
@@ -21,10 +28,6 @@ export const ProjectDetailPage = () => {
         : undefined
     );
   }, [id]);
-
-  const scroll = (scrollOffset: any) => {
-    scrollRef.current.scrollLeft += scrollOffset;
-  };
 
   if (project) {
     return (

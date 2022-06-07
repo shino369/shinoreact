@@ -12,12 +12,14 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { ThunkAction } from "redux-thunk";
+import activeRoute from "./activeRoute";
 
 const reducers = combineReducers({
   //   layout,
   //   auth,
   //   permission,
   // add more reducer here
+  activeRoute
 });
 
 export type RootState = ReturnType<typeof reducers>;

@@ -1,6 +1,6 @@
 // import { Redirect } from 'react-router-dom';
 
-import { LazyAbout, LazyDetail, LazyHome, LazyProjectDetail } from "app/pages";
+import { LazyAbout, LazyDetail, LazyHome, LazyLogin, LazyProjectDetail } from "app/pages";
 import { Navigate  } from 'react-router-dom';
 interface Route {
   name: string;
@@ -28,24 +28,10 @@ const userRoutes: Route[] = [
     component: <LazyProjectDetail />,
   },
   {
-    name: "detail 3",
+    name: "detail",
     icon: "",
-    group: "Protected",
-    path: "/detail3",
-    component: <LazyDetail />,
-  },
-  {
-    name: "detail 4",
-    icon: "",
-    group: "c",
-    path: "/detail4",
-    component: <LazyDetail />,
-  },
-  {
-    name: "detail 5",
-    icon: "",
-    group: "c",
-    path: "/detail5",
+    group: "protected",
+    path: "/detail",
     component: <LazyDetail />,
   },
 
@@ -80,7 +66,13 @@ const groupRoutes = getGroupRoutes();
 
 const authRoutes: Route[] = [
   //   { path: '/logout', component: LogoutPage },
-  //   { path: '/login', component: LoginPage },
+  {
+    name: "login",
+    icon: "",
+    group: "auth",
+    path: "/login",
+    component: <LazyLogin />,
+  },
   //   { path: '/notFound', component: NotFoundPage },
 ];
 

@@ -2,11 +2,12 @@
 
 import { useAnimation } from "app/hooks/custom";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import ContentLoader from "react-content-loader";
 import { Categories, projectDetail, ProjectDetail, techstach } from "app/model";
-import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setActiveRoute } from "store/activeRoute";
 
 export const AboutPage = () => {
   useAnimation();
@@ -15,6 +16,12 @@ export const AboutPage = () => {
     useState<ProjectDetail[]>(projectDetail);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  // const { activeRoute } = useSelector((rootState: RootState) => rootState.activeRoute)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(setActiveRoute('about me'))
+  },[dispatch])
 
   useEffect(() => {
     setLoading(true);

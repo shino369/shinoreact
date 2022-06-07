@@ -1,6 +1,6 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import "./sidebar.scss";
 import { groupRoutes, userRoutes } from "app/routes/routing";
 import { Accordion } from "react-bootstrap";
@@ -8,6 +8,8 @@ import Hamburger from "hamburger-react";
 import { gsap } from "gsap";
 import { TextPlugin } from "gsap/all";
 import Icon from "../icon/icon";
+import { useSelector } from "react-redux";
+import { RootState } from "store";
 
 export interface Props {
   className?: string;
@@ -22,26 +24,20 @@ const Sidebar: React.FC<Props> = ({
   isCollapsed,
   close,
 }) => {
-  let location = useLocation();
-  const [activeRoute, setActiveRoute] = React.useState(location.pathname);
-  const [defaultActiveAccordion, setDefaultActiveAccordion] = React.useState(
-    Object.keys(groupRoutes).indexOf(
-      userRoutes.filter((route) => route.path === location.pathname)[0]?.group
-    )
-  );
+  // let location = useLocation();
+  // const [activeRoute, setActiveRoute] = React.useState(location.pathname);
+
 
   gsap.registerPlugin(TextPlugin);
   const word: string[] = ["WELCOME", "I'M ANTHONY WONG", "A DEVELOPER"];
 
-  React.useEffect(() => {
-    setActiveRoute(location.pathname);
-    close();
-    // const route = userRoutes.filter(
-    //   (route) => route.path === location.pathname
-    // )[0];
+  const { activeRoute } = useSelector((rootState: RootState) => rootState.activeRoute)
+  const [defaultActiveAccordion] = React.useState(
+    Object.keys(groupRoutes).indexOf(
+      userRoutes.filter((route) => route.name === activeRoute)[0]?.group
+    )
+  );
 
-    // setDefaultActiveAccordion(Object.keys(groupRoutes).indexOf(route.group));
-  }, [location]);
 
   React.useEffect(() => {
     const masterTl = gsap.timeline({ repeat: -1 }).pause();
@@ -67,6 +63,7 @@ const Sidebar: React.FC<Props> = ({
       masterTl.kill();
       typing.kill();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -117,7 +114,7 @@ const Sidebar: React.FC<Props> = ({
               >
                 <div
                   className={`${isCollapsed ? "px-1" : "px-4"} ${
-                    activeRoute === route.path ? "active" : ""
+                    activeRoute === route.name ? "active" : ""
                   } label text-uppercase py-3 d-flex align-items-center position-relative`}
                 >
                   <div
@@ -158,7 +155,7 @@ const Sidebar: React.FC<Props> = ({
                   className={`${isCollapsed ? "px-1" : "px-4"}  py-3 position-relative`}
                 >
                   <div className={`header ${isCollapsed ? "hide" : "show"}`}>
-                    {isCollapsed ? '': group}
+                    {isCollapsed ? '': group.toUpperCase()}
                   </div>
                   {isCollapsed && (
                     <div className={`header position-absolute w-100 text-center transition ${isCollapsed ? "opacity-1" : "opacity-0"}`}>
@@ -177,7 +174,7 @@ const Sidebar: React.FC<Props> = ({
                     >
                       <div
                         className={`${isCollapsed ? "px-1" : "px-4"} ${
-                          activeRoute === route.path ? "active" : ""
+                          activeRoute === route.name ? "active" : ""
                         } label text-uppercase py-3`}
                       >
                         <div

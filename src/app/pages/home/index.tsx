@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./index.scss";
 import { useAnimation } from "app/hooks/custom";
 import { HighlightCode } from "app/components";
+import { useDispatch } from "react-redux";
+import { setActiveRoute } from "store/activeRoute";
 
 export const HomePage = () => {
   useAnimation();
+  const dispatch = useDispatch()
 
+  useEffect(() => {
+    dispatch(setActiveRoute('home'))
+  },[dispatch])
+  
   const code = `
   const foo = () => { 
     const [bar, setBar] = useState<string>('foo');

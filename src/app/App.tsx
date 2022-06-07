@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import "./App.scss";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-import { userRoutes } from "./routes/routing";
-import { CommonWrapper, Icon, Sidebar, Topbar } from "./components";
-import Hamburger from "hamburger-react";
+import { authRoutes, userRoutes } from "./routes/routing";
+import { CommonWrapper, Sidebar, Topbar } from "./components";
 import { useMediaQuery } from "react-responsive";
+import { ProtectedRoute } from "./routes";
 
 export const GlobalStyle = createGlobalStyle`
   html,
@@ -97,21 +97,24 @@ export const GlobalStyle = createGlobalStyle`
 
 function App() {
   const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
-  const isIpad = useMediaQuery({ query: `(min-width: 576px) and (max-width: 768px)` });
-  const [isCollapsed, setIsCollapsed] = React.useState(isMobile || isIpad ? true : false);
+  const isIpad = useMediaQuery({
+    query: `(min-width: 576px) and (max-width: 768px)`,
+  });
+  const [isCollapsed, setIsCollapsed] = React.useState(
+    isMobile || isIpad ? true : false
+  );
 
   useEffect(() => {
     console.log(isMobile);
   }, [isMobile]);
 
   useEffect(() => {
-    if(isMobile && !isCollapsed){
+    if (isMobile && !isCollapsed) {
       document.body.style.overflow = "hidden";
-    }else{
+    } else {
       document.body.style.overflow = "auto";
     }
-    
-  },[isCollapsed, isMobile]);
+  }, [isCollapsed, isMobile]);
 
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
@@ -141,13 +144,28 @@ function App() {
         <CommonWrapper className="common-wrapper">
           <Routes>
             {userRoutes.map((route, index) => (
-              <Route path={route.path} key={index} element={route.component}>
-                {route.children && (
-                  route.children.map((child, index) => (
-                    <Route path={child.path} key={index} element={child.component} />
-                  ))
-                )}
-              </Route>
+              <Route
+                path={route.path}
+                key={index}
+                element={
+                  <ProtectedRoute
+                    component={route.component}
+                    protectedRoute={route.group === "protected"}
+                  />
+                }
+              />
+            ))}
+            {authRoutes.map((route, index) => (
+              <Route
+                path={route.path}
+                key={index}
+                element={
+                  <ProtectedRoute
+                    component={route.component}
+                    protectedRoute={route.group === "protected"}
+                  />
+                }
+              />
             ))}
           </Routes>
         </CommonWrapper>

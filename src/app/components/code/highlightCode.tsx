@@ -1,7 +1,7 @@
 import hljs from "highlight.js";
 import typescript from "highlight.js/lib/languages/javascript";
 import "highlight.js/styles/github-dark.css";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 
 interface Props {
   className: string;
