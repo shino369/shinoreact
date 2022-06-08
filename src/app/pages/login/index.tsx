@@ -1,49 +1,108 @@
 // import { useCallback, useEffect, useState } from 'react';
 
+import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setActiveRoute } from "store/activeRoute";
+import { Alert, Card, CardBody, Col, Container, Row } from "reactstrap";
+import { InputField } from "app/components";
+import * as Yup from "yup";
+
+const Schema = Yup.object().shape({
+  username: Yup.string().required("required"),
+  password: Yup.string().required("required"),
+});
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigate();
 
   useEffect(() => {
     dispatch(setActiveRoute("login"));
   }, [dispatch]);
+
+  const onSubmit = async (values: any, action: any) => {
+    // dispatch(loginStart());
+    try {
+      // await login(values);
+      // const user = await getUser();
+      // dispatch(setUser(user));
+      // dispatch(loginSuccess());
+      navigation("/detail");
+    } catch (err) {
+      // console.error(err);
+      // dispatch(loginFail('Incorrect username or password'));
+    }
+  };
+
   return (
     <div className="p-4 d-flex flex-column justify-content-center align-items-center">
-        <p
-          className="remark"
-          style={{
-            fontSize: "0.8rem",
-          }}
-        >
-          {
-            "( Not implemented yet )"
-          }
-        </p>
-      <Form onSubmit={()=>{}} className="border shadow rounded p-4">
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Text className="text-muted">
-            <div>You must login to grant access to protected route</div>
-          </Form.Text>
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
-        <Button variant="primary" className="w-100" >
-          Submit
-        </Button>
-      </Form>
+      <p
+        className="remark"
+        style={{
+          fontSize: "0.8rem",
+        }}
+      >
+        {"( Not implemented yet )"}
+      </p>
+      <Row className="">
+        <Col>
+          <Card className="shadow overflow-hidden">
+          <div className="bg-primary w-100" style={{height:'2rem'}}></div>
+            <CardBody className="mx-4 mb-4">
+              
+              <Formik
+                initialValues={{
+                  loginName: "",
+                  password: "",
+                }}
+                validationSchema={Schema}
+                onSubmit={onSubmit}
+              >
+                {() => (
+                  <Form className="form-horizontal">
+                    {/* {loginError && typeof loginError === 'string' ? (
+                            <Alert color="danger">{loginError}</Alert>
+                          ) : null} */}
+                    <div className="mb-3">
+                      <InputField
+                        name="username"
+                        label="Username"
+                        placeholder="username"
+                        type="text"
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <InputField
+                        name="password"
+                        label="password"
+                        placeholder="password"
+                        type="password"
+                      />
+                    </div>
+                    <div className="mt-3 d-grid">
+                      <button
+                        className="btn btn-primary btn-block"
+                        type="submit"
+                        // disabled={loginLoading}
+                      >
+                        Login
+                        {/* {loginLoading ? (
+                                <i className="bx bx-loader-circle bx-spin" />
+                              ) : (
+                                '登入'
+                              )} */}
+                      </button>
+                    </div>
+                    <div className="mt-4 text-center"></div>
+                  </Form>
+                )}
+              </Formik>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
 
       <Link to="/">go back to home</Link>
     </div>
