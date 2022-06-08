@@ -68,7 +68,7 @@ export const LoginPage = () => {
                     <div className="mb-3">
                       <InputField
                         name="username"
-                        label="Username"
+                        label="username"
                         placeholder="username"
                         type="text"
                       />
