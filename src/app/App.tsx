@@ -3,9 +3,13 @@ import "./App.scss";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import { authRoutes, userRoutes } from "./routes/routing";
-import { CommonWrapper, Sidebar, Topbar } from "./components";
+import { CommonWrapper, Sidebar, Spinner, Topbar } from "./components";
 import { useMediaQuery } from "react-responsive";
 import { ProtectedRoute } from "./routes";
+import useFirebase from "./hooks/firebase";
+import { ToastContainer } from "react-toastify";
+import { TOAST_TIME } from "./config";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const GlobalStyle = createGlobalStyle`
   html,
@@ -102,6 +106,7 @@ export const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+  useFirebase()
   const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
   const isIpad = useMediaQuery({
     query: `(min-width: 576px) and (max-width: 768px)`,
@@ -111,7 +116,7 @@ function App() {
   );
 
   useEffect(() => {
-    console.log(isMobile);
+    // console.log(isMobile);
   }, [isMobile]);
 
   useEffect(() => {
@@ -176,7 +181,18 @@ function App() {
           </Routes>
         </CommonWrapper>
       </div>
-
+      <Spinner />
+      <ToastContainer
+        position="top-right"
+        autoClose={TOAST_TIME}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <GlobalStyle />
     </BrowserRouter>
   );

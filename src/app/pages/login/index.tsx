@@ -2,12 +2,18 @@
 
 import { Form, Formik } from "formik";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setActiveRoute } from "store/activeRoute";
 import { Alert, Card, CardBody, Col, Container, Row } from "reactstrap";
 import { InputField } from "app/components";
 import * as Yup from "yup";
+import { setAuthenticated, setUser } from "store/auth";
+import { toast, ToastContainer } from "react-toastify";
+import { RootState } from "store";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import "./index.scss";
+import { setLoading } from "store/loading";
 
 const Schema = Yup.object().shape({
   username: Yup.string().required("required"),
@@ -17,22 +23,28 @@ const Schema = Yup.object().shape({
 export const LoginPage = () => {
   const dispatch = useDispatch();
   const navigation = useNavigate();
+  const { user, isAuthenticated } = useSelector(
+    (rootState: RootState) => rootState.auth
+  );
 
   useEffect(() => {
     dispatch(setActiveRoute("login"));
   }, [dispatch]);
 
-  const onSubmit = async (values: any, action: any) => {
-    // dispatch(loginStart());
+  const handleLoginGoogle = async () => {
+    dispatch(setLoading(true));
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
     try {
-      // await login(values);
-      // const user = await getUser();
-      // dispatch(setUser(user));
-      // dispatch(loginSuccess());
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      dispatch(setAuthenticated(true));
+      dispatch(setUser(user));
+      // console.log(user);
+      dispatch(setLoading(false));
       navigation("/detail");
-    } catch (err) {
-      // console.error(err);
-      // dispatch(loginFail('Incorrect username or password'));
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -44,9 +56,28 @@ export const LoginPage = () => {
           fontSize: "0.8rem",
         }}
       >
-        {"( Not implemented yet )"}
+        Make use of firebase authentication
       </p>
-      <Row className="">
+      <button
+        onClick={handleLoginGoogle}
+        style={{
+          backgroundColor: "rgb(55, 85, 168)",
+          color: "white",
+        }}
+        className="btn button-primary google d-flex align-items-center p-2 mb-2"
+      >
+        <div className="bg-white p-2 me-2">
+          <img
+            width={30}
+            height={30}
+            src={require("app/assets/images/google.png")}
+            alt="google"
+          />
+        </div>
+
+        <div className="signIn">Sign in with Google</div>
+      </button>
+      {/* <Row className="">
         <Col>
           <Card className="shadow overflow-hidden">
           <div className="bg-primary w-100" style={{height:'2rem'}}></div>
@@ -62,9 +93,9 @@ export const LoginPage = () => {
               >
                 {() => (
                   <Form className="form-horizontal">
-                    {/* {loginError && typeof loginError === 'string' ? (
+                    {loginError && typeof loginError === 'string' ? (
                             <Alert color="danger">{loginError}</Alert>
-                          ) : null} */}
+                          ) : null}
                     <div className="mb-3">
                       <InputField
                         name="username"
@@ -88,11 +119,11 @@ export const LoginPage = () => {
                         // disabled={loginLoading}
                       >
                         Login
-                        {/* {loginLoading ? (
+                        {loginLoading ? (
                                 <i className="bx bx-loader-circle bx-spin" />
                               ) : (
                                 '登入'
-                              )} */}
+                              )}
                       </button>
                     </div>
                     <div className="mt-4 text-center"></div>
@@ -102,7 +133,7 @@ export const LoginPage = () => {
             </CardBody>
           </Card>
         </Col>
-      </Row>
+      </Row> */}
 
       <Link to="/">go back to home</Link>
     </div>

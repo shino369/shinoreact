@@ -40,7 +40,7 @@ const Sidebar: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    console.log(activeRoute);
+    // console.log(activeRoute);
     close();
   }, [activeRoute]);
 

@@ -1,0 +1,11 @@
+@import "theme/custom.scss";
+
+.signIn {
+    @include typography(1.2rem, 'semibold');
+}
+
+.google{
+    // blue
+    background-color: rgb(55, 85, 168);
+    color: white;
+}

@@ -13,13 +13,13 @@ import {
 import storage from "redux-persist/lib/storage";
 import { ThunkAction } from "redux-thunk";
 import activeRoute from "./activeRoute";
+import auth from './auth';
+import loading from "./loading";
 
 const reducers = combineReducers({
-  //   layout,
-  //   auth,
-  //   permission,
-  // add more reducer here
-  activeRoute
+  activeRoute,
+  auth,
+  loading,
 });
 
 export type RootState = ReturnType<typeof reducers>;
@@ -36,9 +36,7 @@ const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) => {
     const middlewares = getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      serializableCheck: false
     });
     return middlewares;
   },

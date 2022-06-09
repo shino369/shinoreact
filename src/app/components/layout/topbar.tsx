@@ -5,8 +5,14 @@ import "./topbar.scss";
 // import { useLocation } from "react-router-dom";
 import React from "react";
 import { RootState } from "store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "../icon/icon";
+import { async } from "rxjs";
+import { getAuth } from "firebase/auth";
+import { setAuthenticated, setUser } from "store/auth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ConfirmDialog } from "..";
 
 export interface Props {
   className?: string;
@@ -26,21 +32,40 @@ const Topbar: React.FC<Props> = ({
   const { activeRoute } = useSelector(
     (rootState: RootState) => rootState.activeRoute
   );
+  const { user } = useSelector((rootState: RootState) => rootState.auth);
+  const [open, setOpen] = React.useState(false);
 
-  // useEffect(() => {
-  //   // const paths = location.pathname.split('/')
-  //   // // check if last is a number and change to :id
-  //   // if (paths[paths.length - 1].match(/^\d+$/)) {
-  //   //   paths[paths.length - 1] = `:id`
-  //   // }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-  //   // setRecent(
-  //   //   userRoutes
-  //   //     .filter((route) => route.path === paths.join('/'))[0]
-  //   //     .name.toUpperCase()
-  //   // );
-  //   setRecent(activeRoute.toUpperCase())
-  // }, [activeRoute]);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
+
+  const handleLogout = async () => {
+    console.log("logout");
+    const auth = getAuth();
+    auth
+      .signOut()
+      .then(() => {
+        dispatch(setAuthenticated(false));
+        dispatch(setUser(null));
+        localStorage.clear();
+
+        // redirect to home
+        navigation("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      });
+
+    handleClose();
+  };
 
   return (
     <div
@@ -52,7 +77,23 @@ const Topbar: React.FC<Props> = ({
         <Hamburger toggled={!isCollapsed} toggle={toggle} />
       </div>
       <div className="current ms-2">{activeRoute.toUpperCase()}</div>
-      <div className="d-flex justify-content-end position-absolute end-0">
+
+      <div className="d-flex justify-content-end align-items-center position-absolute end-0">
+        {user && (
+          <>
+            <img style={{
+              width: "2rem",
+              height: "2rem",
+              borderRadius: "50%",
+              marginRight: "0.5rem",
+            }} src={user.photoURL || ""} className="avatar" alt="" />
+            <div>{user?.displayName}</div>
+            <div className="mx-2">{"|"}</div>
+            <div className="pointer me-2" onClick={handleClickOpen}>
+              logout
+            </div>
+          </>
+        )}
         {[
           { name: "github", url: "https://github.com/shino369" },
           { name: "linkedin", url: "https://www.linkedin.com/in/aw3939" },
@@ -63,7 +104,7 @@ const Topbar: React.FC<Props> = ({
             button
             btnClassName="px-2 hover-opacity"
             onClick={() => {
-              window.open(icon.url, '_blank')
+              window.open(icon.url, "_blank");
             }}
             key={index}
             extname="png"
@@ -73,6 +114,17 @@ const Topbar: React.FC<Props> = ({
           />
         ))}
       </div>
+      <ConfirmDialog
+        title={"Logout?"}
+        message={"Are you sure yoou want to logout?"}
+        onConfirm={() => {
+          handleLogout();
+        }}
+        onCancel={() => {
+          handleClose();
+        }}
+        open={open}
+      />
     </div>
   );
 };
