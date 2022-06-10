@@ -3,6 +3,8 @@ import { ReactComponent as House } from "app/assets/icons/house.svg";
 import { ReactComponent as HouseFill } from "app/assets/icons/house-fill.svg";
 import { ReactComponent as ChatFill } from "app/assets/icons/chat-square-dots-fill.svg";
 import { ReactComponent as Chat } from "app/assets/icons/chat-square-dots.svg";
+import { ReactComponent as Lock } from "app/assets/icons/lock-fill.svg";
+import { ReactComponent as Protected } from "app/assets/icons/protected.svg";
 
 
 export interface Props {
@@ -63,6 +65,10 @@ const Icon: React.FC<Props> = ({
         return <ChatFill width={size} height={size} fill={color} />;
       case "chat":
         return <Chat width={size} height={size} fill={color} />;
+      case "lock-fill":
+        return <Lock width={size} height={size} fill={color} />;
+      case "protected":
+        return <Protected width={size} height={size} fill={color} />;
       default:
         return <House width={size} height={size} fill={color} />;
     }

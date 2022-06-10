@@ -171,7 +171,7 @@ const Sidebar: React.FC<Props> = ({
                           isCollapsed ? "opacity-1" : "opacity-0"
                         }`}
                       >
-                        {group[0]}
+                        {group[0].toUpperCase()}
                       </div>
                     )}
                   </Accordion.Header>
@@ -184,19 +184,29 @@ const Sidebar: React.FC<Props> = ({
                         }}
                         to={route.path}
                       >
-                        <div
-                          className={`${isCollapsed ? "px-1" : "px-4"} ${
-                            activeRoute === route.name ? "active" : ""
-                          } label text-uppercase py-3`}
-                        >
-                          <div
-                            className={`${
-                              isCollapsed ? "hide" : "show"
-                            } label-text`}
-                          >
-                            {route.name}
-                          </div>
-                        </div>
+                 <div
+                  className={`${isCollapsed ? "px-1" : "px-4"} ${
+                    activeRoute === route.name ? "active" : ""
+                  } label text-uppercase py-3 d-flex align-items-center position-relative`}
+                >
+                  <div
+                    className={`position-absolute d-flex justify-content-center transition ${
+                      isCollapsed ? "opacity-1" : "opacity-0"
+                    }`}
+                    style={{
+                      transform: `translateX(${isCollapsed ? "0" : "-10px"})`,
+                      width: `calc(100% - ${isCollapsed ? "0.5rem" : "3rem"})`,
+                    }}
+                  >
+                    <Icon svg name={route.icon} size={24} color={"white"} />
+                  </div>
+
+                  <div
+                    className={`${isCollapsed ? "hide" : "show"} label-text`}
+                  >
+                    {route.name}
+                  </div>
+                </div>
                       </NavLink>
                     ))}
                   </Accordion.Body>

@@ -78,15 +78,20 @@ const Topbar: React.FC<Props> = ({
       </div>
       <div className="current ms-2">{activeRoute.toUpperCase()}</div>
 
-      <div className="d-flex justify-content-end align-items-center position-absolute end-0">
+      <div className="d-flex user justify-content-end align-items-center position-absolute end-0">
         {user && (
           <>
-            <img style={{
-              width: "2rem",
-              height: "2rem",
-              borderRadius: "50%",
-              marginRight: "0.5rem",
-            }} src={user.photoURL || ""} className="avatar" alt="" />
+            <img
+              style={{
+                width: "2rem",
+                height: "2rem",
+                borderRadius: "50%",
+                marginRight: "0.5rem",
+              }}
+              src={user.photoURL || ""}
+              className="avatar"
+              alt=""
+            />
             <div>{user?.displayName}</div>
             <div className="mx-2">{"|"}</div>
             <div className="pointer me-2" onClick={handleClickOpen}>
@@ -94,6 +99,8 @@ const Topbar: React.FC<Props> = ({
             </div>
           </>
         )}
+      </div>
+      <div className="d-flex justify-content-end align-items-center position-fixed bottom-0 end-0">
         {[
           { name: "github", url: "https://github.com/shino369" },
           { name: "linkedin", url: "https://www.linkedin.com/in/aw3939" },

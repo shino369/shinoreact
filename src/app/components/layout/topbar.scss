@@ -29,3 +29,7 @@
   backdrop-filter: blur(5px);
   border-top-left-radius: 0.5rem;
 }
+
+.user { 
+  @include typography(0.75rem, "semibold");
+}

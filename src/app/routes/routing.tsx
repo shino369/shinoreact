@@ -29,7 +29,7 @@ const userRoutes: Route[] = [
   },
   {
     name: "detail",
-    icon: "",
+    icon: "lock-fill",
     group: "protected",
     path: "/detail",
     component: <LazyDetail />,
