@@ -28,10 +28,10 @@ const userRoutes: Route[] = [
     component: <LazyProjectDetail />,
   },
   {
-    name: "detail",
+    name: "posts",
     icon: "lock-fill",
     group: "protected",
-    path: "/detail",
+    path: "/posts",
     component: <LazyDetail />,
   },
 

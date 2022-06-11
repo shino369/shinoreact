@@ -14,6 +14,17 @@ import { RootState } from "store";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import "./index.scss";
 import { setLoading } from "store/loading";
+import {
+  collection,
+  addDoc,
+  getDoc,
+  setDoc,
+  doc,
+  query,
+  where,
+  Timestamp,
+} from "firebase/firestore";
+import { db } from "app/hooks/firebase";
 
 const Schema = Yup.object().shape({
   username: Yup.string().required("required"),
@@ -41,6 +52,24 @@ export const LoginPage = () => {
       dispatch(setAuthenticated(true));
       dispatch(setUser(user));
       // console.log(user);
+
+      // check if user exist in firestore users
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (!docSnap.exists()) {
+        const userData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          role: "user",
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
+        };
+        await setDoc(doc(db, "users", user.uid), userData);
+      }
+
       dispatch(setLoading(false));
       navigation("/detail");
     } catch (error) {
