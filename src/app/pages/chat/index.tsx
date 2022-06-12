@@ -63,7 +63,7 @@ export const ChatPage = () => {
     const scrollTop = e.target.scrollTop;
     const scrollHeight = e.target.scrollHeight;
     const clientHeight = e.target.clientHeight;
-    console.log(scrollTop + clientHeight, scrollHeight);
+    // console.log(scrollTop + clientHeight, scrollHeight);
     if (scrollTop + clientHeight + 200 < scrollHeight) {
       setVisible(true);
     } else {
