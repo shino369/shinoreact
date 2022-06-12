@@ -109,7 +109,7 @@ export const ChatPage = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center chatroom-wrapper p-4">
+    <div className="d-flex justify-content-center chatroom-wrapper px-4 pt-3 pb-5">
       <div className="chatroom rounded overflow-hidden shadow d-flex flex-column">
         <div className="room-title border-bottom text-center py-3 shadow">
           Realtime Chat Room
