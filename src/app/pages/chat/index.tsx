@@ -23,9 +23,10 @@ import moment from "moment";
 import { Input, Table } from "reactstrap";
 import { useFirestoreQuery } from "app/hooks/commonHook";
 import "./index.scss";
-import { ChatItem, InputField } from "app/components";
+import { ChatItem, Icon, InputField } from "app/components";
 import { Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
+import _ from "lodash";
 
 const Schema = Yup.object().shape({
   msg: Yup.string().required("required"),
@@ -39,13 +40,15 @@ export const ChatPage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((rootState: RootState) => rootState.auth);
   const [newMessage, setNewMessage] = useState<any[]>([]);
+  const [visible, setVisible] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(setActiveRoute("chat"));
   }, [dispatch]);
   const _q = query(
     collection(db, "messages"),
-    orderBy("createdAt"), limit(100)
+    orderBy("createdAt"),
+    limit(100)
   );
   const messages = useFirestoreQuery(_q);
   const scrollRef = useRef<any>(null);
@@ -53,6 +56,32 @@ export const ChatPage = () => {
   useEffect(() => {
     scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
   }, [messages]);
+
+  // debounce scroll
+
+  const handleScroll = _.debounce((e) => {
+    const scrollTop = e.target.scrollTop;
+    const scrollHeight = e.target.scrollHeight;
+    const clientHeight = e.target.clientHeight;
+    console.log(scrollTop + clientHeight, scrollHeight);
+    if (scrollTop + clientHeight + 200 < scrollHeight) {
+      setVisible(true);
+    } else {
+      setVisible(false);
+    }
+  }, 100);
+
+  // const handleScroll = (e: any) => {
+  //   const scrollTop = e.target.scrollTop;
+  //   const scrollHeight = e.target.scrollHeight;
+  //   const clientHeight = e.target.clientHeight;
+  //   console.log(scrollTop + clientHeight, scrollHeight);
+  //   if (scrollTop + clientHeight + 200 < scrollHeight) {
+  //     setVisible(true);
+  //   }else{
+  //     setVisible(false);
+  //   }
+  // };
 
   // useEffect(() => {
 
@@ -101,7 +130,6 @@ export const ChatPage = () => {
         createdAt: Timestamp.now(),
       };
       const docRef = await addDoc(collection(db, "messages"), message);
-
     }
     actions.resetForm();
     // console.log("values", values);
@@ -110,12 +138,30 @@ export const ChatPage = () => {
 
   return (
     <div className="d-flex justify-content-center chatroom-wrapper px-4 pt-3 pb-5">
-      <div className="chatroom rounded overflow-hidden shadow d-flex flex-column">
+      <div className="chatroom rounded overflow-hidden shadow d-flex flex-column position-relative">
         <div className="room-title border-bottom text-center py-3 shadow">
           Realtime Chat Room
         </div>
-
-        <div ref={scrollRef} className="room-content hideScroll">
+        <div
+          onClick={() => {
+            scrollRef.current.scrollTo({
+              top: scrollRef.current.scrollHeight,
+              behavior: "smooth",
+            });
+          }}
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateX(100%)",
+          }}
+          className="position-absolute scroll-to pointer transition"
+        >
+          <Icon svg name="arrow-down" size={30} color={"white"} />
+        </div>
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="room-content hideScroll"
+        >
           {messages.map((item, index) => (
             <ChatItem
               key={index}
@@ -140,12 +186,12 @@ export const ChatPage = () => {
               <Form className="d-flex w-100 px-4">
                 <div className="col">
                   <InputField
-                  style={{
-                    backgroundColor: "rgba(54, 57, 63, 0.8)",
-                    border: 'none',
-                    caretColor: 'white',
-                    color: 'white',
-                  }}
+                    style={{
+                      backgroundColor: "rgba(54, 57, 63, 0.8)",
+                      border: "none",
+                      caretColor: "white",
+                      color: "white",
+                    }}
                     name="msg"
                     placeholder="Input something..."
                     type="text"
