@@ -30,11 +30,11 @@ export const projectDetail: ProjectDetail[] = [
     ],
     icon: require("app/assets/images/3tech.jpg"),
     images: [
-      require("app/assets/images/3tech/1.jpg"),
-      require("app/assets/images/3tech/2.jpg"),
-      require("app/assets/images/3tech/3.jpg"),
-      require("app/assets/images/3tech/4.jpg"),
-      require("app/assets/images/3tech/5.jpg"),  
+      // require("app/assets/images/3tech/1.jpg"),
+      // require("app/assets/images/3tech/2.jpg"),
+      // require("app/assets/images/3tech/3.jpg"),
+      // require("app/assets/images/3tech/4.jpg"),
+      // require("app/assets/images/3tech/5.jpg"),  
     ],
   },
   {
@@ -47,10 +47,10 @@ export const projectDetail: ProjectDetail[] = [
     techStack: ["typescript", "javascript", "angular", "rxjs"],
     icon: require("app/assets/images/hkcl.jpg"),
     images: [
-      require("app/assets/images/hkc/1.jpg"),
-      require("app/assets/images/hkc/2.jpg"),
-      require("app/assets/images/hkc/3.jpg"),
-      require("app/assets/images/hkc/4.jpg"),
+      // require("app/assets/images/hkc/1.jpg"),
+      // require("app/assets/images/hkc/2.jpg"),
+      // require("app/assets/images/hkc/3.jpg"),
+      // require("app/assets/images/hkc/4.jpg"),
     ],
   },
   {

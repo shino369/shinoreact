@@ -31,7 +31,7 @@ const userRoutes: Route[] = [
   {
     name: "posts",
     icon: "text-fill",
-    group: "protected",
+    group: "hidden",
     path: "/posts",
     component: <LazyDetail />,
   },

@@ -72,7 +72,7 @@ export const LoginPage = () => {
       }
 
       dispatch(setLoading(false));
-      navigation("/detail");
+      navigation("/chat");
     } catch (error) {
       console.log(error);
       dispatch(setLoading(false));

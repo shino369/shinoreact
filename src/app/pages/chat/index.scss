@@ -4,20 +4,28 @@
   .chatroom-wrapper {
     .chatroom {
       .room-title {
-        @include typography(1.0rem, "semibold");
+        @include typography(1rem, "semibold");
       }
 
       .room-content {
         padding-left: 1rem;
         padding-right: 1rem;
       }
-  
     }
+  }
+
+  .input-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    background-color: rgba(54, 57, 63);
   }
 }
 
 @media screen and (min-width: 576px) {
   .chatroom-wrapper {
+    height: calc(100vh - 3.5rem);
     .chatroom {
       .room-title {
         @include typography(1.2rem, "semibold");
@@ -26,15 +34,15 @@
       .room-content {
         padding-left: 2rem;
         padding-right: 2rem;
+        padding-bottom: 0.5rem;
+        overflow-y: scroll;
+        overflow-x: hidden;
       }
-  
     }
   }
 }
-  
 
 .chatroom-wrapper {
-  height: calc(100vh - 3.5rem);
   .chatroom {
     background-color: rgba(54, 57, 63);
     flex: 1;
@@ -42,7 +50,6 @@
     position: relative;
 
     .room-title {
-
       color: white;
       // position: absolute;
       // top: 0;
@@ -54,13 +61,12 @@
 
     .room-content {
       flex: 1;
-      overflow-y: scroll;
-      overflow-x: hidden;
+      // overflow-y: scroll;
+      // overflow-x: hidden;
       padding-top: 0.5rem;
-      padding-bottom: 0.5rem;
     }
 
-    .scroll-to{
+    .scroll-to {
       bottom: 6rem;
       right: 1rem;
     }
