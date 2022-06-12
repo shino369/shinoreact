@@ -139,7 +139,7 @@ export const ChatPage = () => {
   return (
     <div className="d-flex justify-content-center chatroom-wrapper px-sm-4 pt-sm-3 pb-sm-5">
       <div className="chatroom overflow-hidden shadow d-flex flex-column position-relative">
-        <div className="room-title border-bottom text-center py-3 shadow">
+        <div className="room-title d-none d-sm-block border-bottom text-center py-3 shadow">
           Realtime Chat Room
         </div>
         <div
@@ -161,7 +161,7 @@ export const ChatPage = () => {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="room-content hideScroll"
+          className="room-content hideScroll pt-4 pt-sm-1"
         >
           {messages.map((item, index) => (
             <ChatItem
