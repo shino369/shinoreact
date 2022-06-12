@@ -45,7 +45,7 @@ const InputField = (props: OtherProps & FieldHookConfig<string>) => {
   const { label, type, placeholder, rows, disabled, showError, style } = props;
   return (
     <div
-      className={clsx("transition", "mb-3", "form-group")}
+      className={clsx("transition", "form-group")}
       style={
         type === "textarea"
           ? { height: "unset" }

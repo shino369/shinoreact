@@ -88,6 +88,7 @@ export const LoginPage = () => {
         }}
       >
         Make use of firebase authentication
+        Please enable broswer popup for login
       </p>
       <button
         onClick={handleLoginGoogle}

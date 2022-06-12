@@ -137,8 +137,8 @@ export const ChatPage = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center chatroom-wrapper px-4 pt-3 pb-5">
-      <div className="chatroom rounded overflow-hidden shadow d-flex flex-column position-relative">
+    <div className="d-flex justify-content-center chatroom-wrapper px-sm-4 pt-sm-3 pb-sm-5">
+      <div className="chatroom overflow-hidden shadow d-flex flex-column position-relative">
         <div className="room-title border-bottom text-center py-3 shadow">
           Realtime Chat Room
         </div>
@@ -150,10 +150,11 @@ export const ChatPage = () => {
             });
           }}
           style={{
+            borderRadius: '50%',
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateX(100%)",
           }}
-          className="position-absolute scroll-to pointer transition"
+          className="position-absolute scroll-to pointer transition mb-5 mb-sm-0 shadow"
         >
           <Icon svg name="arrow-down" size={30} color={"white"} />
         </div>
@@ -174,7 +175,7 @@ export const ChatPage = () => {
             />
           ))}
         </div>
-        <div className="border-top pt-3">
+        <div className="border-top pt-3 pb-5 pb-sm-3">
           <Formik
             initialValues={{
               msg: "",
@@ -182,7 +183,7 @@ export const ChatPage = () => {
             validationSchema={Schema}
             onSubmit={onSubmit}
           >
-            {() => (
+            {({values}) => (
               <Form className="d-flex w-100 px-4">
                 <div className="col">
                   <InputField
@@ -191,15 +192,17 @@ export const ChatPage = () => {
                       border: "none",
                       caretColor: "white",
                       color: "white",
+                      resize: "none",
                     }}
                     name="msg"
                     placeholder="Input something..."
-                    type="text"
+                    type="textarea"
                     showError={false}
+                    rows={values.msg?.split('\n').length}
                   />
                 </div>
 
-                <div className="">
+                <div className="d-flex align-items-center">
                   <button
                     className="btn btn-primary btn-block"
                     type="submit"
