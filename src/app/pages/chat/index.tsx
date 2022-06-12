@@ -140,6 +140,12 @@ export const ChatPage = () => {
               <Form className="d-flex w-100 px-4">
                 <div className="col">
                   <InputField
+                  style={{
+                    backgroundColor: "rgba(54, 57, 63, 0.8)",
+                    border: 'none',
+                    caretColor: 'white',
+                    color: 'white',
+                  }}
                     name="msg"
                     placeholder="Input something..."
                     type="text"

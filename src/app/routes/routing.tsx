@@ -16,7 +16,7 @@ const userRoutes: Route[] = [
   { name: "home", icon: "house-fill", group: "", path: "/", component: <LazyHome /> },
   {
     name: "about me",
-    icon: "chat-fill",
+    icon: "person-circle",
     group: "",
     path: "/about",
     component: <LazyAbout />,
@@ -30,7 +30,7 @@ const userRoutes: Route[] = [
   },
   {
     name: "posts",
-    icon: "lock-fill",
+    icon: "text-fill",
     group: "protected",
     path: "/posts",
     component: <LazyDetail />,

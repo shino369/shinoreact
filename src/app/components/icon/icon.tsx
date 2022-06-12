@@ -5,6 +5,9 @@ import { ReactComponent as ChatFill } from "app/assets/icons/chat-square-dots-fi
 import { ReactComponent as Chat } from "app/assets/icons/chat-square-dots.svg";
 import { ReactComponent as Lock } from "app/assets/icons/lock-fill.svg";
 import { ReactComponent as Protected } from "app/assets/icons/protected.svg";
+import { ReactComponent as Person } from "app/assets/icons/person-fill.svg";
+import { ReactComponent as PersonCircle } from "app/assets/icons/person-circle.svg";
+import { ReactComponent as Text } from "app/assets/icons/text-fill.svg";
 
 
 export interface Props {
@@ -69,6 +72,12 @@ const Icon: React.FC<Props> = ({
         return <Lock width={size} height={size} fill={color} />;
       case "protected":
         return <Protected width={size} height={size} fill={color} />;
+      case "person-fill":
+        return <Person width={size} height={size} fill={color} />;
+      case "person-circle":
+        return <PersonCircle width={size} height={size} fill={color} />;
+      case "text-fill":
+        return <Text width={size} height={size} fill={color} />;
       default:
         return <House width={size} height={size} fill={color} />;
     }

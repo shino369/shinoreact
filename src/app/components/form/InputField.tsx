@@ -37,11 +37,12 @@ interface OtherProps {
   rows?: number;
   disabled?: boolean;
   showError?: boolean;
+  style?: React.CSSProperties;
 }
 
 const InputField = (props: OtherProps & FieldHookConfig<string>) => {
   const [field, meta] = useField(props);
-  const { label, type, placeholder, rows, disabled, showError } = props;
+  const { label, type, placeholder, rows, disabled, showError, style } = props;
   return (
     <div
       className={clsx("transition", "mb-3", "form-group")}
@@ -53,11 +54,12 @@ const InputField = (props: OtherProps & FieldHookConfig<string>) => {
     >
       {label ? <Label>{props.label}</Label> : null}
       <Input
+        style={style}
         className="form-control"
         {...field}
         placeholder={placeholder}
         type={type}
-        autoComplete="new-password"
+        autoComplete="off"
         rows={rows}
         disabled={disabled}
       />
