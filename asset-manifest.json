@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/shinoreact/static/css/main.755e4563.css",
-    "main.js": "/shinoreact/static/js/main.be88b803.js",
+    "main.js": "/shinoreact/static/js/main.2b12a0f7.js",
     "static/css/841.a942e30a.chunk.css": "/shinoreact/static/css/841.a942e30a.chunk.css",
-    "static/js/841.715342c6.chunk.js": "/shinoreact/static/js/841.715342c6.chunk.js",
+    "static/js/841.1e2f8aa8.chunk.js": "/shinoreact/static/js/841.1e2f8aa8.chunk.js",
     "static/css/877.62fab1a7.chunk.css": "/shinoreact/static/css/877.62fab1a7.chunk.css",
     "static/js/877.824cbe04.chunk.js": "/shinoreact/static/js/877.824cbe04.chunk.js",
     "static/js/270.16ff39be.chunk.js": "/shinoreact/static/js/270.16ff39be.chunk.js",
@@ -12,7 +12,7 @@
     "static/css/521.3bf672a3.chunk.css": "/shinoreact/static/css/521.3bf672a3.chunk.css",
     "static/js/521.4ffd1388.chunk.js": "/shinoreact/static/js/521.4ffd1388.chunk.js",
     "static/css/316.3c2d1f68.chunk.css": "/shinoreact/static/css/316.3c2d1f68.chunk.css",
-    "static/js/316.eedccfcb.chunk.js": "/shinoreact/static/js/316.eedccfcb.chunk.js",
+    "static/js/316.c8784e72.chunk.js": "/shinoreact/static/js/316.c8784e72.chunk.js",
     "static/js/787.b464cf3c.chunk.js": "/shinoreact/static/js/787.b464cf3c.chunk.js",
     "static/js/724.501b755b.chunk.js": "/shinoreact/static/js/724.501b755b.chunk.js",
     "static/js/681.e8073b0f.chunk.js": "/shinoreact/static/js/681.e8073b0f.chunk.js",
@@ -34,13 +34,16 @@
     "static/media/lock-fill.svg": "/shinoreact/static/media/lock-fill.2d16dad739e53e32d7acb8feb38683d1.svg",
     "static/media/chat-square-dots.svg": "/shinoreact/static/media/chat-square-dots.0d90f7b70fc621f9cba334f963e12f03.svg",
     "static/media/house.svg": "/shinoreact/static/media/house.8173eeb9d12f4c7ced962ebbe5b0a6d0.svg",
+    "static/media/text-fill.svg": "/shinoreact/static/media/text-fill.1b8bec48086d76a9192313c2bc7a5564.svg",
     "static/media/house-fill.svg": "/shinoreact/static/media/house-fill.672c9a9eeb99bd20c1be8617f848835c.svg",
+    "static/media/person-fill.svg": "/shinoreact/static/media/person-fill.fe324fae4114a4f3b69741e2e3b68f2b.svg",
     "static/media/chat-square-dots-fill.svg": "/shinoreact/static/media/chat-square-dots-fill.bb2914af02c62cb92f63bba98e8ff3b3.svg",
+    "static/media/person-circle.svg": "/shinoreact/static/media/person-circle.0cc99cddde470841356b9e14e5682408.svg",
     "static/media/protected.svg": "/shinoreact/static/media/protected.e596a357c88ada8b2b99fe8d7a3cd683.svg",
     "main.755e4563.css.map": "/shinoreact/static/css/main.755e4563.css.map",
-    "main.be88b803.js.map": "/shinoreact/static/js/main.be88b803.js.map",
+    "main.2b12a0f7.js.map": "/shinoreact/static/js/main.2b12a0f7.js.map",
     "841.a942e30a.chunk.css.map": "/shinoreact/static/css/841.a942e30a.chunk.css.map",
-    "841.715342c6.chunk.js.map": "/shinoreact/static/js/841.715342c6.chunk.js.map",
+    "841.1e2f8aa8.chunk.js.map": "/shinoreact/static/js/841.1e2f8aa8.chunk.js.map",
     "877.62fab1a7.chunk.css.map": "/shinoreact/static/css/877.62fab1a7.chunk.css.map",
     "877.824cbe04.chunk.js.map": "/shinoreact/static/js/877.824cbe04.chunk.js.map",
     "270.16ff39be.chunk.js.map": "/shinoreact/static/js/270.16ff39be.chunk.js.map",
@@ -49,7 +52,7 @@
     "521.3bf672a3.chunk.css.map": "/shinoreact/static/css/521.3bf672a3.chunk.css.map",
     "521.4ffd1388.chunk.js.map": "/shinoreact/static/js/521.4ffd1388.chunk.js.map",
     "316.3c2d1f68.chunk.css.map": "/shinoreact/static/css/316.3c2d1f68.chunk.css.map",
-    "316.eedccfcb.chunk.js.map": "/shinoreact/static/js/316.eedccfcb.chunk.js.map",
+    "316.c8784e72.chunk.js.map": "/shinoreact/static/js/316.c8784e72.chunk.js.map",
     "787.b464cf3c.chunk.js.map": "/shinoreact/static/js/787.b464cf3c.chunk.js.map",
     "724.501b755b.chunk.js.map": "/shinoreact/static/js/724.501b755b.chunk.js.map",
     "681.e8073b0f.chunk.js.map": "/shinoreact/static/js/681.e8073b0f.chunk.js.map",
@@ -57,6 +60,6 @@
   },
   "entrypoints": [
     "static/css/main.755e4563.css",
-    "static/js/main.be88b803.js"
+    "static/js/main.2b12a0f7.js"
   ]
 }
