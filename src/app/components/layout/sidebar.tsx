@@ -33,14 +33,14 @@ const Sidebar: React.FC<Props> = ({
   const { activeRoute } = useSelector(
     (rootState: RootState) => rootState.activeRoute
   );
-  const [defaultActiveAccordion] = useState(
-    Object.keys(groupRoutes).indexOf(
-      userRoutes.filter((route) => route.name === activeRoute)[0]?.group
-    )
+  const [defaultActiveAccordion, setDefaultActiveAccordion] = useState(
+    // Object.keys(groupRoutes).indexOf(
+    //   userRoutes.filter((route) => route.name === activeRoute)[0]?.group
+    // )
+    0
   );
 
   useEffect(() => {
-    // console.log(activeRoute);
     close();
   }, [activeRoute]);
 

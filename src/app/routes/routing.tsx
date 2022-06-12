@@ -1,6 +1,7 @@
 // import { Redirect } from 'react-router-dom';
 
 import { LazyAbout, LazyDetail, LazyHome, LazyLogin, LazyProjectDetail } from "app/pages";
+import { LazyChat } from "app/pages/chat/lazy";
 import { Navigate  } from 'react-router-dom';
 interface Route {
   name: string;
@@ -34,6 +35,13 @@ const userRoutes: Route[] = [
     path: "/posts",
     component: <LazyDetail />,
   },
+  {
+    name: "chat",
+    icon: "chat-fill",
+    group: "protected",
+    path: "/chat",
+    component: <LazyChat />,
+  },
 
   // 404
   {
@@ -51,7 +59,7 @@ interface GroupRoutes {
 
 const getGroupRoutes = () => {
   const group: string[] = userRoutes
-    .filter((f) => f.group.length > 0)
+    .filter((f) => f.group.length > 0 && f.group !== "hidden")
     .map((route) => route.group)
     .filter((v, i, a) => a.indexOf(v) === i);
   const _groupRoutes: GroupRoutes = {};

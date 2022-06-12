@@ -1,0 +1,32 @@
+@import "theme/custom.scss";
+
+.chatroom-wrapper {
+  height: calc(100vh - 3.5rem);
+  .chatroom {
+    background-color: rgba(54, 57, 63);
+    flex: 1;
+    flex-grow: 1;
+    position: relative;
+
+    .room-title {
+      @include typography(1.2rem, "semibold");
+      color: white;
+      // position: absolute;
+      // top: 0;
+      // left: 0;
+      // width: 100%;
+      // z-index: 1000;
+      background: rgba(54, 57, 63);
+    }
+
+    .room-content {
+      flex: 1;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+}

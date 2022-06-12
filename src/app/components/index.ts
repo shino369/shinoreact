@@ -6,3 +6,4 @@ export {default as HighlightCode } from './code/highlightCode';
 export {default as InputField } from './form/InputField';
 export {default as Spinner} from './layout/spinner';
 export {default as ConfirmDialog} from './dialog/confirmDialog';
+export * from './chat';

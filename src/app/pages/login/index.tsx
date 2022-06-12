@@ -47,6 +47,7 @@ export const LoginPage = () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     try {
+      
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       dispatch(setAuthenticated(true));

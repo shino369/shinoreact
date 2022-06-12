@@ -10,6 +10,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
   Timestamp,
@@ -24,11 +25,35 @@ export const DetailPage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((rootState: RootState) => rootState.auth);
   const [data, setData] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [category, setCategory] = useState<string>("entertainment");
 
   useEffect(() => {
     dispatch(setActiveRoute("posts"));
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   const _q = query(collection(db, "messages"));
+  //   const unsubscribe = onSnapshot(_q, (snapshot) => {
+  //     snapshot.docChanges().forEach((change) => {
+  //       if (change.type === "added") {
+  //         console.log("New: ", change.doc.data());
+  //       }
+  //       if (change.type === "modified") {
+  //         console.log("Modified: ", change.doc.data());
+  //       }
+  //       if (change.type === "removed") {
+  //         console.log("Removed: ", change.doc.data());
+  //       }
+  //       const msg = change.doc.data();
+  //       setMessages((prev) => [...prev, msg]);
+  //     });
+  //   });
+
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
   const getFeeds = useCallback(async () => {
     let _data: any[] = [];
@@ -47,7 +72,7 @@ export const DetailPage = () => {
       const subcollectionSnapshot = await getDocs(subcollection);
       subcollectionSnapshot.forEach((subdoc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(subdoc.id, " => ", subdoc.data());
+        // console.log(subdoc.id, " => ", subdoc.data());
         _data.push({
           id: subdoc.id,
           ...subdoc.data(),
@@ -60,7 +85,7 @@ export const DetailPage = () => {
         });
       });
       setData(_data);
-      console.log(_data);
+      // console.log(_data);
     });
   }, [category]);
 
@@ -108,6 +133,13 @@ export const DetailPage = () => {
             </tbody>
           </Table>
         </div>
+        {/* <div>
+          {messages.map((item, index) => (
+            <div key={index}>
+              {item.name}:{item.message}
+            </div>
+          ))}
+        </div> */}
       </div>
 
       <Link to="/">go back to home</Link>

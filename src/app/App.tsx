@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./App.scss";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import { authRoutes, userRoutes } from "./routes/routing";
 import { CommonWrapper, Sidebar, Spinner, Topbar } from "./components";
@@ -10,6 +10,7 @@ import useFirebase from "./hooks/firebase";
 import { ToastContainer } from "react-toastify";
 import { TOAST_TIME } from "./config";
 import 'react-toastify/dist/ReactToastify.css';
+
 
 export const GlobalStyle = createGlobalStyle`
   html,
