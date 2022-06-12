@@ -43,7 +43,7 @@ const ChatItem: React.FC<Props> = ({
         </div>
         <div>
           <div className="name text-white">{name}</div>
-          <div className="date col text-end">{createdAt}</div>
+          <div className="date col text-start">{createdAt}</div>
         </div>
       </div>
       <div className="chat-bubble">{message}</div>

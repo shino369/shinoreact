@@ -1,6 +1,6 @@
 // import { useCallback, useEffect, useState } from 'react';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { setActiveRoute } from "store/activeRoute";
@@ -48,6 +48,11 @@ export const ChatPage = () => {
     orderBy("createdAt"), limit(100)
   );
   const messages = useFirestoreQuery(_q);
+  const scrollRef = useRef<any>(null);
+
+  useEffect(() => {
+    scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
+  }, [messages]);
 
   // useEffect(() => {
 
@@ -99,7 +104,7 @@ export const ChatPage = () => {
 
     }
     actions.resetForm();
-    console.log("values", values);
+    // console.log("values", values);
     // submit to firebase
   };
 
@@ -107,14 +112,14 @@ export const ChatPage = () => {
     <div className="d-flex justify-content-center chatroom-wrapper p-4">
       <div className="chatroom rounded overflow-hidden shadow d-flex flex-column">
         <div className="room-title border-bottom text-center py-3 shadow">
-          Real-Time Chat Room
+          Realtime Chat Room
         </div>
 
-        <div className="room-content hideScroll">
+        <div ref={scrollRef} className="room-content hideScroll">
           {messages.map((item, index) => (
             <ChatItem
               key={index}
-              name={item.name}
+              name={item.displayName}
               message={item.message}
               self={user?.uid === item?.uid}
               avatar={item.photoURL}
