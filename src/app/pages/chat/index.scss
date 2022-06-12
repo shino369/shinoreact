@@ -1,5 +1,38 @@
 @import "theme/custom.scss";
 
+@media screen and (max-width: 576px) {
+  .chatroom-wrapper {
+    .chatroom {
+      .room-title {
+        @include typography(1.0rem, "semibold");
+      }
+
+      .room-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+  
+    }
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .chatroom-wrapper {
+    .chatroom {
+      .room-title {
+        @include typography(1.2rem, "semibold");
+      }
+
+      .room-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+  
+    }
+  }
+}
+  
+
 .chatroom-wrapper {
   height: calc(100vh - 3.5rem);
   .chatroom {
@@ -9,7 +42,7 @@
     position: relative;
 
     .room-title {
-      @include typography(1.2rem, "semibold");
+
       color: white;
       // position: absolute;
       // top: 0;
@@ -25,8 +58,6 @@
       overflow-x: hidden;
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
-      padding-left: 2rem;
-      padding-right: 2rem;
     }
 
     .scroll-to{
