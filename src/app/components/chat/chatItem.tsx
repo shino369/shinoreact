@@ -20,6 +20,20 @@ const ChatItem: React.FC<Props> = ({
   createdAt,
   onPress,
 }) => {
+  const URL_REGEX =
+    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+
+  const renderText = (txt: string) =>
+    txt.split(" ").map((part, index) =>
+      URL_REGEX.test(part) ? (
+        <a key={index} href={part} target="_blank" rel="noreferrer">
+          {part}
+        </a>
+      ) : (
+        part + " "
+      )
+    );
+
   return self ? (
     <div className="mb-2 me-2">
       <div className={`d-flex mb-2 justify-content-end align-items-center`}>
@@ -29,11 +43,13 @@ const ChatItem: React.FC<Props> = ({
           icon={"options"}
           size={15}
           color={"#fff"}
-          onPress={(item:string) =>{ onPress(item); }}
+          onPress={(item: string) => {
+            onPress(item);
+          }}
         />
       </div>
       <div className={`d-flex mb-2 justify-content-end`}>
-        <div className="chat-bubble">{message}</div>
+        <div className="chat-bubble">{renderText(message)}</div>
       </div>
     </div>
   ) : (
@@ -56,7 +72,7 @@ const ChatItem: React.FC<Props> = ({
           <div className="date col text-start">{createdAt}</div>
         </div>
       </div>
-      <div className="chat-bubble">{message}</div>
+      <div className="chat-bubble">{renderText(message)}</div>
     </div>
   );
 };
