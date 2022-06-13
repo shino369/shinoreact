@@ -10,6 +10,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  deleteDoc,
   limit,
   onSnapshot,
   orderBy,
@@ -28,6 +29,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import _ from "lodash";
 import { useMediaQuery } from "react-responsive";
+import ConfimrDialog from "app/components/dialog/confirmDialog";
 
 const Schema = Yup.object().shape({
   msg: Yup.string().required("required"),
@@ -37,12 +39,19 @@ type FormItem = {
   msg: string;
 };
 
+interface PendingAction {
+  action: string;
+  id: string;
+}
+
 export const ChatPage = () => {
   const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
   const dispatch = useDispatch();
   const { user } = useSelector((rootState: RootState) => rootState.auth);
   const [newMessage, setNewMessage] = useState<any[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [pendingAction, setPendingAction] = useState<PendingAction>();
 
   useEffect(() => {
     dispatch(setActiveRoute("chat"));
@@ -60,10 +69,16 @@ export const ChatPage = () => {
   const [rows, setRows] = useState<number>(1);
 
   useEffect(() => {
-    scrollRef.current.scrollTo(0, scrollRef.current.scrollHeight);
+    isMobile
+      ? window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        })
+      : scrollRef.current.scrollTo({
+          top: scrollRef.current.scrollHeight,
+          behavior: "smooth",
+        });
   }, [messages]);
-
-  // debounce scroll
 
   // add window scroll event listener
   useEffect(() => {
@@ -103,48 +118,6 @@ export const ChatPage = () => {
     }
   }, 100);
 
-  // const handleScroll = (e: any) => {
-  //   const scrollTop = e.target.scrollTop;
-  //   const scrollHeight = e.target.scrollHeight;
-  //   const clientHeight = e.target.clientHeight;
-  //   console.log(scrollTop + clientHeight, scrollHeight);
-  //   if (scrollTop + clientHeight + 200 < scrollHeight) {
-  //     setVisible(true);
-  //   }else{
-  //     setVisible(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-
-  //   const _q = query(collection(db, "messages"), orderBy("createdAt"), limit(100));
-  //   const unsubscribe = onSnapshot(_q, (snapshot) => {
-  //     const data = snapshot.docs.map(
-  //       (doc) => ({
-  //         ...doc.data(),
-  //         id: doc.id,
-  //       })
-  //     )
-  //     // snapshot.docChanges().forEach((change) => {
-  //     //   if (change.type === "added") {
-  //     //     console.log("New: ", change.doc.data());
-  //     //   }
-  //     //   if (change.type === "modified") {
-  //     //     console.log("Modified: ", change.doc.data());
-  //     //   }
-  //     //   if (change.type === "removed") {
-  //     //     console.log("Removed: ", change.doc.data());
-  //     //   }
-  //     //   const msg = change.doc.data();
-  //     //   setMessages((prev) => [...prev, msg]);
-  //     // });
-  //   });
-
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, []);
-
   const onSubmit = async (
     values: FormItem,
     actions: FormikHelpers<FormItem>
@@ -176,15 +149,28 @@ export const ChatPage = () => {
     }
     setTimeout(() => {
       isMobile
-      ? window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        })
-      : scrollRef.current.scrollTo({
-          top: scrollRef.current.scrollHeight,
-          behavior: "smooth",
-        });
+        ? window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth",
+          })
+        : scrollRef.current.scrollTo({
+            top: scrollRef.current.scrollHeight,
+            behavior: "smooth",
+          });
     }, 50);
+  };
+
+  const deleteChatItem = useCallback(async (id: string) => {
+    const res = await deleteDoc(doc(db, "messages", id));
+    // console.log(res);
+  }, []);
+
+  const handleOptions = () => {
+    if (pendingAction && pendingAction.action === "DELETE") {
+      deleteChatItem(pendingAction.id);
+    }
+    setPendingAction(undefined);
+    setIsOpen(false);
   };
 
   return (
@@ -233,10 +219,17 @@ export const ChatPage = () => {
               avatar={item.photoURL}
               uid={item.uid}
               createdAt={item.createdAt}
+              onPress={(action) => {
+                setPendingAction({ action: action, id: item.id });
+                setIsOpen(true);
+              }}
             />
           ))}
         </div>
-        <div className="border-top pt-3 pb-5 pb-sm-3 input-fixed">
+        <div
+          className="border-top pt-3 pb-5 pb-sm-3 input-fixed"
+          style={{ zIndex: 30 }}
+        >
           <Formik
             initialValues={{
               msg: "",
@@ -283,6 +276,18 @@ export const ChatPage = () => {
           </Formik>
         </div>
       </div>
+      <ConfimrDialog
+        open={isOpen}
+        title={"Confirm delete?"}
+        message={"Deleted content cannot be recovered."}
+        onCancel={() => {
+          setPendingAction(undefined);
+          setIsOpen(false);
+        }}
+        onConfirm={() => {
+          handleOptions();
+        }}
+      />
     </div>
   );
 };

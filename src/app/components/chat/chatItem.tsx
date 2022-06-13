@@ -1,3 +1,4 @@
+import CustomDropdown from "../form/dropdown";
 import "./chatItem.scss";
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
   message: string;
   avatar: string;
   createdAt: string;
+  onPress: (item: string) => void;
 }
 
 const ChatItem: React.FC<Props> = ({
@@ -16,11 +18,19 @@ const ChatItem: React.FC<Props> = ({
   message,
   avatar,
   createdAt,
+  onPress,
 }) => {
   return self ? (
     <div className="mb-2 me-2">
-      <div className={`d-flex mb-2 justify-content-end`}>
-        <div className="date col text-end">{createdAt}</div>
+      <div className={`d-flex mb-2 justify-content-end align-items-center`}>
+        <div className="date col text-end me-2">{createdAt}</div>
+        <CustomDropdown
+          data={["DELETE"]}
+          icon={"options"}
+          size={15}
+          color={"#fff"}
+          onPress={(item:string) =>{ onPress(item); }}
+        />
       </div>
       <div className={`d-flex mb-2 justify-content-end`}>
         <div className="chat-bubble">{message}</div>

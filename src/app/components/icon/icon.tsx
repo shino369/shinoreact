@@ -9,6 +9,7 @@ import { ReactComponent as Person } from "app/assets/icons/person-fill.svg";
 import { ReactComponent as PersonCircle } from "app/assets/icons/person-circle.svg";
 import { ReactComponent as Text } from "app/assets/icons/text-fill.svg";
 import { ReactComponent as ArrowDown } from "app/assets/icons/arrow-down.svg";
+import { ReactComponent as Options } from "app/assets/icons/options.svg";
 
 
 export interface Props {
@@ -81,6 +82,8 @@ const Icon: React.FC<Props> = ({
         return <Text width={size} height={size} fill={color} />;
       case "arrow-down":
         return <ArrowDown width={size} height={size} fill={color} />;
+      case "options":
+        return <Options width={size} height={size} fill={color} />;
       default:
         return <House width={size} height={size} fill={color} />;
     }
