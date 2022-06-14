@@ -55,7 +55,7 @@ export function useFirestoreQuery(query: Query<DocumentData>) {
   
       // Detach listener
       return unsubscribe;
-    }, []);
+    }, [query]);
   
     return docs;
   }

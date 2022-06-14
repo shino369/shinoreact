@@ -4,6 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { setActiveRoute } from "store/activeRoute";
+import ReadyRoundIcon from "@rsuite/icons/ReadyRound";
+import PeoplesIcon from "@rsuite/icons/Peoples";
+import PlusRoundIcon from "@rsuite/icons/PlusRound";
 import {
   addDoc,
   collection,
@@ -52,21 +55,41 @@ export const ChatPage = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [pendingAction, setPendingAction] = useState<PendingAction>();
-
-  useEffect(() => {
-    dispatch(setActiveRoute("chat"));
-  }, [dispatch]);
-  const _q = query(
-    collection(db, "messages"),
-    orderBy("createdAt"),
-    limit(100)
-  );
-  const messages = useFirestoreQuery(_q);
+  const [showRooms, setShowRooms] = useState<boolean>(false);
+  const [activeRoom, setActiveRoom] = useState<string>("public");
+  const [rooms, setRooms] = useState<any[]>([]);
+  const [newRoomDialog, setNewRoomDialog] = useState<boolean>(false);
   const scrollRef = useRef<any>(null);
   const [paddingBottom, setPaddingBottom] = useState<string>(
     isMobile ? "7rem" : "1rem"
   );
   const [rows, setRows] = useState<number>(1);
+
+  const [querying, setQuerying] = useState<any>(
+    query(collection(db, "messages"), orderBy("createdAt"), limit(100))
+  );
+
+  useEffect(() => {
+    if (activeRoom === "public") {
+      setQuerying(
+        query(collection(db, "messages"), orderBy("createdAt"), limit(100))
+      );
+    } else {
+      setQuerying(
+        query(
+          collection(db, "rooms", activeRoom, "messages"),
+          orderBy("createdAt"),
+          limit(100)
+        )
+      );
+    }
+  }, [activeRoom]);
+
+  let messages = useFirestoreQuery(querying);
+
+  useEffect(() => {
+    dispatch(setActiveRoute("chat"));
+  }, [dispatch]);
 
   useEffect(() => {
     isMobile
@@ -80,16 +103,29 @@ export const ChatPage = () => {
         });
   }, [messages]);
 
-  // add window scroll event listener
+  const getTotalRooms = useCallback(async () => {
+    const q = query(
+      collection(db, "rooms"),
+      where("members", "array-contains", user!.uid)
+    );
+    const querySnapshot = await getDocs(q);
+    let roomTotal: any = [];
+    querySnapshot.forEach((doc) => {
+      roomTotal.push({ id: doc.id, ...doc.data() });
+    });
+    setRooms(roomTotal);
+  }, [user]);
+
+  useEffect(() => {
+    getTotalRooms();
+  }, [getTotalRooms]);
+
   useEffect(() => {
     const windowScroll = _.debounce((e) => {
-      // console.log(window.scrollY);
-      // console.log(document.body.scrollHeight);
       if (isMobile) {
         const scrollTop = window.scrollY;
         const scrollHeight = document.body.scrollHeight;
         const clientHeight = window.innerHeight;
-        // console.log(scrollTop + clientHeight, scrollHeight);
         if (scrollTop + clientHeight + 200 < scrollHeight) {
           setVisible(true);
         } else {
@@ -125,7 +161,10 @@ export const ChatPage = () => {
     const { msg } = values;
     const trimmed = msg.trim();
     if (trimmed.length > 0) {
-      const _q = collection(db, "messages");
+      const _q =
+        activeRoom === "public"
+          ? collection(db, "messages")
+          : collection(db, "rooms", activeRoom, "messages");
 
       const message = {
         uid: user!.uid,
@@ -134,7 +173,7 @@ export const ChatPage = () => {
         message: trimmed,
         createdAt: Timestamp.now(),
       };
-      const docRef = await addDoc(collection(db, "messages"), message);
+      const docRef = await addDoc(_q, message);
     }
     actions.resetForm();
     // console.log("values", values);
@@ -176,6 +215,50 @@ export const ChatPage = () => {
   return (
     <div className="d-flex justify-content-center chatroom-wrapper px-sm-4 pt-sm-3 pb-sm-5">
       <div className="chatroom shadow d-flex flex-column position-relative">
+        <div
+          className="d-sm-none position-fixed start-0 w-100 d-flex align-items-start justify-content-start"
+          style={{ zIndex: 1020 }}
+        >
+          <div className="mt-2 ms-1 p-0 d-flex flex-column justify-content-center align-items-center">
+            <div
+              onClick={() => {
+                setShowRooms(!showRooms);
+              }}
+              className="btn bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
+              style={{ borderRadius: "50%", width: 30, height: 30 }}
+            >
+              <PeoplesIcon width={15} height={15} fill={"#fff"} />
+            </div>
+            <div
+              onClick={() => {setNewRoomDialog(true)}}
+              className="btn bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
+              style={{ borderRadius: "50%", width: 30, height: 30 }}
+            >
+              <PlusRoundIcon width={15} height={15} fill={"#fff"} />
+            </div>
+          </div>
+          <div
+            className="transition"
+            style={{
+              transform: showRooms ? "translateX(0)" : "translateX(-1000px)",
+              width: "calc(100vw - 50px)",
+              fontSize: "0.75rem",
+            }}
+          >
+            {[{ name: "public", id: "public" }, ...rooms].map((item, index) => (
+              <button
+                onClick={() => {
+                  setActiveRoom(item.id);
+                  setShowRooms(false);
+                }}
+                key={index}
+                className="ms-2 my-2 bg-primary text-white rounded-pill px-3 py-1 shadow"
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="room-title d-none d-sm-block border-bottom text-center py-3 shadow">
           Realtime Chat Room
         </div>
@@ -263,11 +346,12 @@ export const ChatPage = () => {
 
                 <div className="d-flex align-items-center">
                   <button
-                    className="btn btn-primary btn-block"
+                    className="btn p-0"
+                    style={{ borderRadius: "50%", border: "none" }}
                     type="submit"
                     // disabled={loginLoading}
                   >
-                    SEND
+                    <ReadyRoundIcon width={40} height={40} fill={"#fff"} />
                   </button>
                 </div>
                 <div className="mt-4 text-center"></div>
@@ -286,6 +370,20 @@ export const ChatPage = () => {
         }}
         onConfirm={() => {
           handleOptions();
+        }}
+      />
+      <ConfimrDialog
+        open={newRoomDialog}
+        title={"Add new room"}
+        message={"Please input room name."}
+        withInput
+        onCancel={() => {
+          setNewRoomDialog(false);
+        }}
+        onConfirm={(e) => {
+          console.log(e);
+          setNewRoomDialog(false);
+          // handleAddNewRoom()
         }}
       />
     </div>
