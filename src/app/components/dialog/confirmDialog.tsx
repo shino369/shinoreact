@@ -10,6 +10,10 @@ import { TransitionProps } from "@mui/material/transitions";
 import Slide from "@mui/material/Slide";
 import { Input } from "reactstrap";
 import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Form, Formik, FormikHelpers } from "formik";
+import InputField from "../form/InputField";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -19,6 +23,14 @@ interface ConfirmDialogProps {
   onConfirm: (input?: string) => void;
   onCancel: () => void;
 }
+
+type FormItem = {
+  room: string;
+};
+
+const schema = yup.object().shape({
+  room: yup.string().required().min(3, "must > 3 characters"),
+});
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -37,11 +49,23 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
   onConfirm,
   onCancel,
 }) => {
-  const [value, setValue] = React.useState("");
-  const inputRef = React.useRef<any>(null);
-  const handleConfirm = () => {
-    onConfirm(inputRef.current.value);
+  const onSubmit = (values: FormItem, actions: FormikHelpers<FormItem>) => {
+    console.log(values);
+    onConfirm(values.room);
   };
+  const formikRef = React.useRef<any>();
+  
+  React.useEffect(() => {
+    // reset form
+    if (!open && formikRef.current) {
+      setTimeout(() => {
+        formikRef.current.resetForm();
+      }
+      , 100);
+    }
+  }
+  , [open]);
+
   return (
     <Dialog
       open={open}
@@ -51,35 +75,58 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
+      <DialogContent className={`${withInput? 'pb-0' : ''}`}>
         <div>
           <div>{message}</div>
           {withInput && (
-            <div>
-              <Input
-                ref={inputRef}
-                // onChange={(e) => {
-                //   setValue(e.target.value);
-                // }}
-                type="text"
-              />
+            <Formik
+              innerRef={formikRef}
+              initialValues={{
+                room: "",
+              }}
+              validationSchema={schema}
+              onSubmit={onSubmit}
+            >
+              {({ values, errors, isValid }) => (
+                <Form className=" ">
+                  <div className="col">
+                    <InputField
+                      style={{
+                        backgroundColor: "rgba(54, 57, 63, 0.8)",
+                        border: "none",
+                        caretColor: "white",
+                        color: "white",
+                        resize: "none",
+                      }}
+                      name="room"
+                      placeholder="Input room name"
+                      showError
+                    />
+                  </div>
 
-              <div style={{ fontSize: "0.75rem" }}>At least 3 characters</div>
-            </div>
+                  <DialogActions className="justify-content-between px-0">
+                    <Button onClick={onCancel}>Cancel</Button>
+                    <Button disabled={!isValid} type="submit">Confirm</Button>
+                  </DialogActions>
+                </Form>
+              )}
+            </Formik>
           )}
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel}>Cancel</Button>
-        <Button
-          disabled={inputRef?.current && inputRef?.current?.value < 3}
-          onClick={() => {
-            withInput ? handleConfirm() : onConfirm();
-          }}
-        >
-          Confirm
-        </Button>
-      </DialogActions>
+      {!withInput && (
+        <DialogActions>
+          <Button onClick={onCancel}>Cancel</Button>
+
+          <Button
+            onClick={() => {
+              onConfirm();
+            }}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

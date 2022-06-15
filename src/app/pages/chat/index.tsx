@@ -85,7 +85,7 @@ export const ChatPage = () => {
     }
   }, [activeRoom]);
 
-  let messages = useFirestoreQuery(querying);
+  const messages = useFirestoreQuery(querying);
 
   useEffect(() => {
     dispatch(setActiveRoute("chat"));
@@ -118,7 +118,7 @@ export const ChatPage = () => {
 
   useEffect(() => {
     getTotalRooms();
-  }, [getTotalRooms]);
+  }, [activeRoom, getTotalRooms]);
 
   useEffect(() => {
     const windowScroll = _.debounce((e) => {
@@ -139,6 +139,26 @@ export const ChatPage = () => {
       window.removeEventListener("scroll", windowScroll);
     };
   }, []);
+
+  const handleAddNewRoom = useCallback(async (room: any) => {
+    const newRoom = await addDoc(collection(db, "rooms"), {
+      name: room,
+      members: [user!.uid],
+    });
+    // add subcollection messages to newRoom
+    await addDoc(collection(db, "rooms", newRoom.id, "messages"), {
+      uid: user!.uid,
+      displayName: user!.displayName,
+      photoURL: user!.photoURL,
+      message: 'Welcome to the room',
+      createdAt: Timestamp.now(),
+    });
+
+    setNewRoomDialog(false);
+    setActiveRoom(newRoom.id);
+  }
+  , [user]);
+    
 
   const handleScroll = _.debounce((e) => {
     if (!isMobile) {
@@ -216,47 +236,63 @@ export const ChatPage = () => {
     <div className="d-flex justify-content-center chatroom-wrapper px-sm-4 pt-sm-3 pb-sm-5">
       <div className="chatroom shadow d-flex flex-column position-relative">
         <div
-          className="d-sm-none position-fixed start-0 w-100 d-flex align-items-start justify-content-start"
+          onClick={() => {
+            setShowRooms(!showRooms);
+          }}
+          className={`${
+            showRooms ? "" : "d-none"
+          } backdrop position-absolute w-100 h-100`}
+          style={{ backdropFilter: "blur(2px)", zIndex: 1010 }}
+        />
+        <div
+          className="position-fixed start-0 h-100 d-flex align-items-start justify-content-start"
           style={{ zIndex: 1020 }}
         >
-          <div className="mt-2 ms-1 p-0 d-flex flex-column justify-content-center align-items-center">
+          <div className="p-0 d-flex flex-column h-100 justify-content-start align-items-center position-relative">
             <div
               onClick={() => {
                 setShowRooms(!showRooms);
               }}
-              className="btn bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
-              style={{ borderRadius: "50%", width: 30, height: 30 }}
+              className="btn ms-1 mt-2 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
+              style={{ borderRadius: "50%", width: 30, height: 30, zIndex: 20 }}
             >
               <PeoplesIcon width={15} height={15} fill={"#fff"} />
             </div>
             <div
-              onClick={() => {setNewRoomDialog(true)}}
-              className="btn bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
-              style={{ borderRadius: "50%", width: 30, height: 30 }}
+              onClick={() => {
+                setNewRoomDialog(true);
+              }}
+              className="btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
+              style={{ borderRadius: "50%", width: 30, height: 30, zIndex: 20 }}
             >
               <PlusRoundIcon width={15} height={15} fill={"#fff"} />
             </div>
-          </div>
-          <div
-            className="transition"
-            style={{
-              transform: showRooms ? "translateX(0)" : "translateX(-1000px)",
-              width: "calc(100vw - 50px)",
-              fontSize: "0.75rem",
-            }}
-          >
-            {[{ name: "public", id: "public" }, ...rooms].map((item, index) => (
-              <button
-                onClick={() => {
-                  setActiveRoom(item.id);
-                  setShowRooms(false);
-                }}
-                key={index}
-                className="ms-2 my-2 bg-primary text-white rounded-pill px-3 py-1 shadow"
-              >
-                {item.name}
-              </button>
-            ))}
+            <div
+              className="transition bg-primary position-absolute h-100"
+              style={{
+                transform: showRooms ? "translateX(0)" : "translateX(-1000px)",
+                width: "8rem",
+                fontSize: "0.75rem",
+                paddingTop: "4rem",
+                left: "0px",
+                zIndex: 10,
+              }}
+            >
+              {[{ name: "public", id: "public" }, ...rooms].map(
+                (item, index) => (
+                  <button
+                    onClick={() => {
+                      setActiveRoom(item.id);
+                      setShowRooms(false);
+                    }}
+                    key={index}
+                    className="my-2 bg-primary text-white px-3 py-1"
+                  >
+                    {item.name}
+                  </button>
+                )
+              )}
+            </div>
           </div>
         </div>
         <div className="room-title d-none d-sm-block border-bottom text-center py-3 shadow">
@@ -381,9 +417,7 @@ export const ChatPage = () => {
           setNewRoomDialog(false);
         }}
         onConfirm={(e) => {
-          console.log(e);
-          setNewRoomDialog(false);
-          // handleAddNewRoom()
+          handleAddNewRoom(e)
         }}
       />
     </div>

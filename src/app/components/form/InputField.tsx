@@ -66,7 +66,7 @@ const InputField = (props: OtherProps & FieldHookConfig<string>) => {
       {showError && (
         <div
           style={{
-            opacity: meta.touched && meta.error ? 1 : 0,
+            opacity:  meta.error ? 1 : 0,
           }}
           className={`transition text-danger`}
         >
