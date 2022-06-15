@@ -234,7 +234,7 @@ export const ChatPage = () => {
 
   return (
     <div className="d-flex justify-content-center chatroom-wrapper px-sm-4 pt-sm-3 pb-sm-5">
-      <div className="chatroom shadow d-flex flex-column position-relative">
+      <div className={`chatroom shadow d-flex flex-column position-relative ${isMobile ? '' : 'overflow-hidden' }`}>
         <div
           onClick={() => {
             setShowRooms(!showRooms);
@@ -245,15 +245,15 @@ export const ChatPage = () => {
           style={{ backdropFilter: "blur(2px)", zIndex: 1010 }}
         />
         <div
-          className="position-fixed start-0 h-100 d-flex align-items-start justify-content-start"
+          className={`${isMobile ? 'position-fixed' : 'position-absolute'} start-0 h-100 d-flex align-items-start justify-content-start`}
           style={{ zIndex: 1020 }}
         >
-          <div className="p-0 d-flex flex-column h-100 justify-content-start align-items-center position-relative">
+          <div className={`p-0 d-flex ${isMobile? 'flex-column align-items-center' : 'd-flex align-items-start'} h-100 justify-content-start position-relative`}>
             <div
               onClick={() => {
                 setShowRooms(!showRooms);
               }}
-              className="btn ms-1 mt-2 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
+              className="btn ms-1 mt-1 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
               style={{ borderRadius: "50%", width: 30, height: 30, zIndex: 20 }}
             >
               <PeoplesIcon width={15} height={15} fill={"#fff"} />
