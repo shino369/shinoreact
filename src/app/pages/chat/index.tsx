@@ -58,6 +58,8 @@ type FormItem = {
 };
 
 const ICON_COLOR = "#fff";
+const CHAT_TOP_HEIGHT = "3.5rem";
+const ICON_SIZE = 15
 
 interface PendingAction {
   action: string;
@@ -105,7 +107,11 @@ export const ChatPage = () => {
     }
   }, [activeRoom]);
 
-  const messages = [
+  const messages = useFirestoreQuery(querying);
+
+  /*
+  fake data to prevent heavy read of firestore in testing
+  [
     {
       displayName: "test",
       id: "gkjshgkjsnh",
@@ -114,7 +120,8 @@ export const ChatPage = () => {
       uid: "safsgsakfasj",
       message: "safakgalgalj",
     },
-  ]; // useFirestoreQuery(querying);
+  ]; 
+  */
 
   useEffect(() => {
     dispatch(setActiveRoute("chat"));
@@ -210,8 +217,6 @@ export const ChatPage = () => {
     [user]
   );
 
-
-
   // handle form submit new message
   const onSubmit = async (
     values: FormItem,
@@ -287,7 +292,7 @@ export const ChatPage = () => {
           <div
             className="d-flex align-items-center"
             style={{
-              minHeight: "3.75rem",
+              minHeight: CHAT_TOP_HEIGHT,
             }}
           >
             <div
@@ -302,7 +307,7 @@ export const ChatPage = () => {
                 zIndex: 20,
               }}
             >
-              <PeoplesIcon width={15} height={15} fill={ICON_COLOR} />
+              <PeoplesIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
             </div>
             <div
               onClick={() => {
@@ -318,7 +323,7 @@ export const ChatPage = () => {
                 zIndex: 20,
               }}
             >
-              <PlusRoundIcon width={15} height={15} fill={ICON_COLOR} />
+              <PlusRoundIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
             </div>
             <div
               onClick={() => {
@@ -334,7 +339,7 @@ export const ChatPage = () => {
                 zIndex: 20,
               }}
             >
-              <SearchIcon width={15} height={15} fill={ICON_COLOR} />
+              <SearchIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
             </div>
           </div>
 
@@ -377,7 +382,7 @@ export const ChatPage = () => {
                       }}
                       className="col-2 d-flex justify-content-end pointer"
                     >
-                      <CopyIcon width={15} height={15} fill={ICON_COLOR} />
+                      <CopyIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
                     </div>
                   </div>
                 )}
@@ -426,7 +431,7 @@ export const ChatPage = () => {
                   zIndex: 20,
                 }}
               >
-                <PeoplesIcon width={15} height={15} fill={ICON_COLOR} />
+                <PeoplesIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
               </div>
               <div
                 onClick={() => {
@@ -442,7 +447,7 @@ export const ChatPage = () => {
                   zIndex: 20,
                 }}
               >
-                <PlusRoundIcon width={15} height={15} fill={ICON_COLOR} />
+                <PlusRoundIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
               </div>
               <div
                 onClick={() => {
@@ -458,7 +463,7 @@ export const ChatPage = () => {
                   zIndex: 20,
                 }}
               >
-                <SearchIcon width={15} height={15} fill={ICON_COLOR} />
+                <SearchIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
               </div>
             </div>
             <div
@@ -504,7 +509,7 @@ export const ChatPage = () => {
                           }}
                           className="col-2 d-flex justify-content-end pointer"
                         >
-                          <CopyIcon width={15} height={15} fill={ICON_COLOR} />
+                          <CopyIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
                         </div>
                       </div>
                     )}
@@ -516,7 +521,11 @@ export const ChatPage = () => {
         </div>
         <div
           ref={headerRef}
-          className="room-title d-none d-sm-block border-bottom text-center py-3 shadow"
+          className="room-title d-none d-sm-flex justify-content-center align-items-center border-bottom text-center shadow"
+          style={{
+            height: CHAT_TOP_HEIGHT,
+            fontSize: "1rem",
+          }}
         >
           Realtime Chat Room
         </div>
@@ -579,16 +588,13 @@ export const ChatPage = () => {
             onSubmit={onSubmit}
           >
             {({ values }) => (
-              <Form
-                className="d-flex w-100 px-4"
-                onChange={() => {
-                  
-                }}
-              >
+              <Form className="d-flex w-100 px-4" onChange={() => {}}>
                 <div className="col">
                   <InputField
                     onInputChange={(e: any) => {
-                      e !== "" && e.length > 0 && handleRows(e.split("\n").length);
+                      e !== "" &&
+                        e.length > 0 &&
+                        handleRows(e.split("\n").length);
                     }}
                     style={{
                       backgroundColor: "rgba(54, 57, 63, 0.8)",
