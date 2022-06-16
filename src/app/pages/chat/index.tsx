@@ -291,15 +291,20 @@ export const ChatPage = () => {
   };
 
   // delete message
-  const deleteChatItem = useCallback(async (id: string) => {
-    if(activeRoom === 'public') {
-      const res = await deleteDoc(doc(db, "messages", id));
-    }else{
-      const res = await deleteDoc(doc(db, "rooms", activeRoom, "messages", id));
-    }
+  const deleteChatItem = useCallback(
+    async (id: string) => {
+      if (activeRoom === "public") {
+        const res = await deleteDoc(doc(db, "messages", id));
+      } else {
+        const res = await deleteDoc(
+          doc(db, "rooms", activeRoom, "messages", id)
+        );
+      }
 
-    // console.log(res);
-  }, [activeRoom]);
+      // console.log(res);
+    },
+    [activeRoom]
+  );
 
   // after confirm dialog
   const handleOptions = () => {
@@ -401,7 +406,9 @@ export const ChatPage = () => {
               <div key={index} className="mb-1 text-white p-0 text-start w-100">
                 <div
                   onClick={() => {
-                    setActiveRoom(item.id);
+                    if (activeRoom !== item.id) {
+                      setActiveRoom(item.id);
+                    }
                     isMobile && setShowRooms(false);
                   }}
                   className="px-2 bg-chat pointer d-flex w-100 justify-content-between align-items-center"
@@ -544,7 +551,9 @@ export const ChatPage = () => {
                   >
                     <div
                       onClick={() => {
-                        setActiveRoom(item.id);
+                        if (activeRoom !== item.id) {
+                          setActiveRoom(item.id);
+                        }
                         isMobile && setShowRooms(false);
                       }}
                       className="px-2 bg-chat pointer d-flex w-100 justify-content-between align-items-center"
