@@ -38,6 +38,7 @@ interface OtherProps {
   disabled?: boolean;
   showError?: boolean;
   style?: React.CSSProperties;
+  onInputChange?: (e:any) => void;
 }
 
 const InputField = (props: OtherProps & FieldHookConfig<string>) => {
@@ -62,11 +63,15 @@ const InputField = (props: OtherProps & FieldHookConfig<string>) => {
         autoComplete="off"
         rows={rows}
         disabled={disabled}
+        onChange={(e) => {
+          field.onChange(e);
+          props.onInputChange && props.onInputChange(e.target.value);
+        }}
       />
       {showError && (
         <div
           style={{
-            opacity:  meta.error ? 1 : 0,
+            opacity: meta.error ? 1 : 0,
           }}
           className={`transition text-danger`}
         >

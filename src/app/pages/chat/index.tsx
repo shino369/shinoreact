@@ -1,15 +1,24 @@
-// import { useCallback, useEffect, useState } from 'react';
-
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "store";
 import { Link } from "react-router-dom";
 import { setActiveRoute } from "store/activeRoute";
+import { useMediaQuery } from "react-responsive";
+
+// react suite
 import ReadyRoundIcon from "@rsuite/icons/ReadyRound";
 import PeoplesIcon from "@rsuite/icons/Peoples";
 import PlusRoundIcon from "@rsuite/icons/PlusRound";
 import SearchIcon from "@rsuite/icons/Search";
 import CopyIcon from "@rsuite/icons/Copy";
 import ArrowRightLineIcon from "@rsuite/icons/ArrowRightLine";
+
+// form
+import { Input, Table } from "reactstrap";
+import { Form, Formik, FormikHelpers } from "formik";
+import * as Yup from "yup";
+
+// firebase
 import {
   addDoc,
   collection,
@@ -25,16 +34,19 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "app/hooks/firebase";
-import { RootState } from "store";
+
+// library
 import moment from "moment";
-import { Input, Table } from "reactstrap";
-import { useFirestoreQuery } from "app/hooks/commonHook";
-import "./index.scss";
-import { ChatItem, Icon, InputField } from "app/components";
-import { Form, Formik, FormikHelpers } from "formik";
-import * as Yup from "yup";
 import _ from "lodash";
-import { useMediaQuery } from "react-responsive";
+
+// hook
+import { useFirestoreQuery } from "app/hooks/commonHook";
+
+// style
+import "./index.scss";
+
+// component
+import { ChatItem, Icon, InputField } from "app/components";
 import ConfimrDialog from "app/components/dialog/confirmDialog";
 
 const Schema = Yup.object().shape({
@@ -53,9 +65,9 @@ interface PendingAction {
 }
 
 export const ChatPage = () => {
-  const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
-  const dispatch = useDispatch();
   const { user } = useSelector((rootState: RootState) => rootState.auth);
+  const dispatch = useDispatch();
+  const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
   const [newMessage, setNewMessage] = useState<any[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -64,8 +76,7 @@ export const ChatPage = () => {
   const [activeRoom, setActiveRoom] = useState<string>("public");
   const [rooms, setRooms] = useState<any[]>([]);
   const [newRoomDialog, setNewRoomDialog] = useState<boolean>(false);
-  const headerRef = useRef<any>(null);
-  const scrollRef = useRef<any>(null);
+
   const [paddingBottom, setPaddingBottom] = useState<string>(
     isMobile ? "7rem" : "1rem"
   );
@@ -74,7 +85,10 @@ export const ChatPage = () => {
   const [querying, setQuerying] = useState<any>(
     query(collection(db, "messages"), orderBy("createdAt"), limit(100))
   );
+  const headerRef = useRef<any>(null);
+  const scrollRef = useRef<any>(null);
 
+  // change query when activeRoom change
   useEffect(() => {
     if (activeRoom === "public") {
       setQuerying(
@@ -106,6 +120,7 @@ export const ChatPage = () => {
     dispatch(setActiveRoute("chat"));
   }, [dispatch]);
 
+  // scroll to bottom when new message come
   useEffect(() => {
     isMobile
       ? window.scrollTo({
@@ -118,6 +133,7 @@ export const ChatPage = () => {
         });
   }, [messages]);
 
+  // get rooms list
   const getTotalRooms = useCallback(async () => {
     const q = query(
       collection(db, "rooms"),
@@ -131,10 +147,12 @@ export const ChatPage = () => {
     setRooms(roomTotal);
   }, [user]);
 
+  // refresh list when activeRoom change
   useEffect(() => {
     getTotalRooms();
   }, [activeRoom, getTotalRooms]);
 
+  // scroll to bottom button effect (body in mobile)
   useEffect(() => {
     const windowScroll = _.debounce((e) => {
       if (isMobile) {
@@ -155,6 +173,22 @@ export const ChatPage = () => {
     };
   }, []);
 
+  // scroll to bottom button effect (container in breakpoint > sm)
+  const handleScroll = _.debounce((e) => {
+    if (!isMobile) {
+      const scrollTop = e.target.scrollTop;
+      const scrollHeight = e.target.scrollHeight;
+      const clientHeight = e.target.clientHeight;
+      // console.log(scrollTop + clientHeight, scrollHeight);
+      if (scrollTop + clientHeight + 200 < scrollHeight) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+      }
+    }
+  }, 100);
+
+  // add new room
   const handleAddNewRoom = useCallback(
     async (room: any) => {
       const newRoom = await addDoc(collection(db, "rooms"), {
@@ -176,20 +210,9 @@ export const ChatPage = () => {
     [user]
   );
 
-  const handleScroll = _.debounce((e) => {
-    if (!isMobile) {
-      const scrollTop = e.target.scrollTop;
-      const scrollHeight = e.target.scrollHeight;
-      const clientHeight = e.target.clientHeight;
-      // console.log(scrollTop + clientHeight, scrollHeight);
-      if (scrollTop + clientHeight + 200 < scrollHeight) {
-        setVisible(true);
-      } else {
-        setVisible(false);
-      }
-    }
-  }, 100);
 
+
+  // handle form submit new message
   const onSubmit = async (
     values: FormItem,
     actions: FormikHelpers<FormItem>
@@ -216,6 +239,7 @@ export const ChatPage = () => {
     // submit to firebase
   };
 
+  // auto grow textarea
   const handleRows = (rows: number) => {
     const _rows = rows > 5 ? 5 : rows;
     setRows(_rows);
@@ -235,11 +259,13 @@ export const ChatPage = () => {
     }, 50);
   };
 
+  // delete message
   const deleteChatItem = useCallback(async (id: string) => {
     const res = await deleteDoc(doc(db, "messages", id));
     // console.log(res);
   }, []);
 
+  // after confirm dialog
   const handleOptions = () => {
     if (pendingAction && pendingAction.action === "DELETE") {
       deleteChatItem(pendingAction.id);
@@ -556,11 +582,14 @@ export const ChatPage = () => {
               <Form
                 className="d-flex w-100 px-4"
                 onChange={() => {
-                  handleRows(values.msg?.split("\n").length);
+                  
                 }}
               >
                 <div className="col">
                   <InputField
+                    onInputChange={(e: any) => {
+                      e !== "" && e.length > 0 && handleRows(e.split("\n").length);
+                    }}
                     style={{
                       backgroundColor: "rgba(54, 57, 63, 0.8)",
                       border: "none",
@@ -583,7 +612,7 @@ export const ChatPage = () => {
                     type="submit"
                     // disabled={loginLoading}
                   >
-                    <ReadyRoundIcon width={40} height={40} fill={ICON_COLOR} />
+                    <ReadyRoundIcon width={30} height={30} fill={ICON_COLOR} />
                   </button>
                 </div>
                 <div className="mt-4 text-center"></div>
