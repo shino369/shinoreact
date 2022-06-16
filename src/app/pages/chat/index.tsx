@@ -550,7 +550,7 @@ export const ChatPage = () => {
             isMobile ? "position-fixed" : "position-absolute"
           } scroll-to pointer bg-dark transition mb-5 mb-sm-0 shadow`}
         >
-          <Icon svg name="arrow-down" size={30} color={"white"} />
+          <Icon svg name="arrow-down" size={20} color={"white"} />
         </div>
         <div
           ref={scrollRef}

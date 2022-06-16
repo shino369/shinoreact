@@ -54,30 +54,33 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
     onConfirm(values.room);
   };
   const formikRef = React.useRef<any>();
-  
+
   React.useEffect(() => {
     // reset form
     if (!open && formikRef.current) {
       setTimeout(() => {
         formikRef.current.resetForm();
-      }
-      , 100);
+      }, 100);
     }
-  }
-  , [open]);
+  }, [open]);
 
   return (
     <Dialog
+      PaperProps={{
+        style: { borderRadius: 0 },
+      }}
       open={open}
       TransitionComponent={Transition}
       keepMounted
       onClose={onCancel}
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle><span style={{fontSize: '1rem'}}>{title}</span></DialogTitle>
-      <DialogContent className={`${withInput? 'pb-0' : ''}`}>
+      <DialogTitle className="pt-2">
+        <span style={{ fontSize: "1rem" }}>{title}</span>
+      </DialogTitle>
+      <DialogContent className={`${withInput ? "pb-0" : ""}`}>
         <div>
-          <div style={{fontSize: '0.8rem'}}>{message}</div>
+          <div style={{ fontSize: "0.8rem" }}>{message}</div>
           {withInput && (
             <Formik
               innerRef={formikRef}
@@ -94,6 +97,7 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
                       style={{
                         backgroundColor: "rgba(54, 57, 63, 0.8)",
                         border: "none",
+                        borderRadius: "0",
                         caretColor: "white",
                         color: "white",
                         resize: "none",
@@ -106,7 +110,9 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
 
                   <DialogActions className="justify-content-between px-0">
                     <Button onClick={onCancel}>Cancel</Button>
-                    <Button disabled={!isValid} type="submit">Confirm</Button>
+                    <Button disabled={!isValid} type="submit">
+                      Confirm
+                    </Button>
                   </DialogActions>
                 </Form>
               )}
