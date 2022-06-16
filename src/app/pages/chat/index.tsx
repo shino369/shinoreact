@@ -7,6 +7,9 @@ import { setActiveRoute } from "store/activeRoute";
 import ReadyRoundIcon from "@rsuite/icons/ReadyRound";
 import PeoplesIcon from "@rsuite/icons/Peoples";
 import PlusRoundIcon from "@rsuite/icons/PlusRound";
+import SearchIcon from "@rsuite/icons/Search";
+import CopyIcon from "@rsuite/icons/Copy";
+import ArrowRightLineIcon from "@rsuite/icons/ArrowRightLine";
 import {
   addDoc,
   collection,
@@ -42,6 +45,8 @@ type FormItem = {
   msg: string;
 };
 
+const ICON_COLOR = "#fff";
+
 interface PendingAction {
   action: string;
   id: string;
@@ -55,10 +60,11 @@ export const ChatPage = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [pendingAction, setPendingAction] = useState<PendingAction>();
-  const [showRooms, setShowRooms] = useState<boolean>(false);
+  const [showRooms, setShowRooms] = useState<boolean>(!isMobile);
   const [activeRoom, setActiveRoom] = useState<string>("public");
   const [rooms, setRooms] = useState<any[]>([]);
   const [newRoomDialog, setNewRoomDialog] = useState<boolean>(false);
+  const headerRef = useRef<any>(null);
   const scrollRef = useRef<any>(null);
   const [paddingBottom, setPaddingBottom] = useState<string>(
     isMobile ? "7rem" : "1rem"
@@ -85,7 +91,16 @@ export const ChatPage = () => {
     }
   }, [activeRoom]);
 
-  const messages = useFirestoreQuery(querying);
+  const messages = [
+    {
+      displayName: "test",
+      id: "gkjshgkjsnh",
+      photoURL: "",
+      createdAt: "",
+      uid: "safsgsakfasj",
+      message: "safakgalgalj",
+    },
+  ]; // useFirestoreQuery(querying);
 
   useEffect(() => {
     dispatch(setActiveRoute("chat"));
@@ -140,25 +155,26 @@ export const ChatPage = () => {
     };
   }, []);
 
-  const handleAddNewRoom = useCallback(async (room: any) => {
-    const newRoom = await addDoc(collection(db, "rooms"), {
-      name: room,
-      members: [user!.uid],
-    });
-    // add subcollection messages to newRoom
-    await addDoc(collection(db, "rooms", newRoom.id, "messages"), {
-      uid: user!.uid,
-      displayName: user!.displayName,
-      photoURL: user!.photoURL,
-      message: 'Welcome to the room',
-      createdAt: Timestamp.now(),
-    });
+  const handleAddNewRoom = useCallback(
+    async (room: any) => {
+      const newRoom = await addDoc(collection(db, "rooms"), {
+        name: room,
+        members: [user!.uid],
+      });
+      // add subcollection messages to newRoom
+      await addDoc(collection(db, "rooms", newRoom.id, "messages"), {
+        uid: user!.uid,
+        displayName: user!.displayName,
+        photoURL: user!.photoURL,
+        message: "Welcome to the room",
+        createdAt: Timestamp.now(),
+      });
 
-    setNewRoomDialog(false);
-    setActiveRoom(newRoom.id);
-  }
-  , [user]);
-    
+      setNewRoomDialog(false);
+      setActiveRoom(newRoom.id);
+    },
+    [user]
+  );
 
   const handleScroll = _.debounce((e) => {
     if (!isMobile) {
@@ -234,43 +250,198 @@ export const ChatPage = () => {
 
   return (
     <div className="d-flex justify-content-center chatroom-wrapper px-sm-4 pt-sm-3 pb-sm-5">
-      <div className={`chatroom shadow d-flex flex-column position-relative ${isMobile ? '' : 'overflow-hidden' }`}>
+      <div
+        className={`${
+          isMobile ? "d-none" : ""
+        } start-0 h-100 d-flex align-items-start justify-content-start bg-room overflow-hidden`}
+      >
         <div
-          onClick={() => {
-            setShowRooms(!showRooms);
-          }}
-          className={`${
-            showRooms ? "" : "d-none"
-          } backdrop position-absolute w-100 h-100`}
-          style={{ backdropFilter: "blur(2px)", zIndex: 1010 }}
-        />
-        <div
-          className={`${isMobile ? 'position-fixed' : 'position-absolute'} start-0 h-100 d-flex align-items-start justify-content-start`}
-          style={{ zIndex: 1020 }}
+          className={`p-0 d-flex flex-column h-100 justify-content-start position-relative`}
         >
-          <div className={`p-0 d-flex ${isMobile? 'flex-column align-items-center' : 'd-flex align-items-start'} h-100 justify-content-start position-relative`}>
+          <div
+            className="d-flex align-items-center"
+            style={{
+              minHeight: "3.75rem",
+            }}
+          >
             <div
               onClick={() => {
                 setShowRooms(!showRooms);
               }}
-              className="btn ms-1 mt-1 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
-              style={{ borderRadius: "50%", width: 30, height: 30, zIndex: 20 }}
+              className="d-sm-none btn ms-1 mt-1 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
+              style={{
+                borderRadius: "50%",
+                width: 30,
+                height: 30,
+                zIndex: 20,
+              }}
             >
-              <PeoplesIcon width={15} height={15} fill={"#fff"} />
+              <PeoplesIcon width={15} height={15} fill={ICON_COLOR} />
             </div>
             <div
               onClick={() => {
                 setNewRoomDialog(true);
               }}
-              className="btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
-              style={{ borderRadius: "50%", width: 30, height: 30, zIndex: 20 }}
+              className={`${
+                !showRooms ? "d-none" : ""
+              } btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+              style={{
+                borderRadius: "50%",
+                width: 30,
+                height: 30,
+                zIndex: 20,
+              }}
             >
-              <PlusRoundIcon width={15} height={15} fill={"#fff"} />
+              <PlusRoundIcon width={15} height={15} fill={ICON_COLOR} />
+            </div>
+            <div
+              onClick={() => {
+                // setNewRoomDialog(true);
+              }}
+              className={`${
+                !showRooms ? "d-none" : ""
+              } btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+              style={{
+                borderRadius: "50%",
+                width: 30,
+                height: 30,
+                zIndex: 20,
+              }}
+            >
+              <SearchIcon width={15} height={15} fill={ICON_COLOR} />
+            </div>
+          </div>
+
+          <div
+            className="transition me-1 overflow-scroll"
+            style={{
+              // transform: showRooms ? "translateX(0)" : "translateX(-8rem)",
+              width: "8rem",
+              fontSize: "0.75rem",
+
+              left: "0px",
+              zIndex: 10,
+            }}
+          >
+            {[{ name: "public", id: "public" }, ...rooms].map((item, index) => (
+              <div
+                key={index}
+                className="mb-1 text-white p-0 text-start w-100"
+              >
+                <div
+                  onClick={() => {
+                    setActiveRoom(item.id);
+                    isMobile && setShowRooms(false);
+                  }}
+                  className="px-2 bg-chat pointer d-flex w-100 justify-content-between align-items-center"
+                >
+                  <div className="col">{item.name}</div>
+                  <div className="col-2 py-2">
+                    <ArrowRightLineIcon
+                      width={20}
+                      height={20}
+                      fill={ICON_COLOR}
+                    />
+                  </div>
+                </div>
+                {item.id !== "public" && (
+                  <div className="px-2 d-flex align-items-center">
+                    <div className="text-break col">{item.id}</div>
+                    <div
+                      onClick={() => {
+                        // copy text to clipboard
+                        navigator.clipboard.writeText(item.id);
+                      }}
+                      className="col-2 d-flex justify-content-end pointer"
+                    >
+                      <CopyIcon width={15} height={15} fill={ICON_COLOR} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div
+        className={`chatroom shadow d-flex flex-column position-relative ${
+          isMobile ? "" : "overflow-hidden"
+        }`}
+      >
+        <div
+          onClick={() => {
+            setShowRooms(!showRooms);
+          }}
+          className={`${
+            showRooms && isMobile ? "" : "d-none"
+          } backdrop position-absolute w-100 h-100`}
+          style={{ zIndex: 1010 }}
+        />
+        <div
+          className={`${
+            isMobile ? "position-fixed" : "d-none"
+          } start-0 h-100 d-flex align-items-start justify-content-start`}
+          style={{ zIndex: 1020 }}
+        >
+          <div
+            className={`p-0 d-flex ${
+              isMobile
+                ? "flex-column align-items-center"
+                : "d-flex align-items-start"
+            } h-100 justify-content-start position-relative`}
+          >
+            <div className="d-flex align-items-center">
+              <div
+                onClick={() => {
+                  setShowRooms(!showRooms);
+                }}
+                className="btn ms-1 mt-1 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
+                style={{
+                  borderRadius: "50%",
+                  width: 30,
+                  height: 30,
+                  zIndex: 20,
+                }}
+              >
+                <PeoplesIcon width={15} height={15} fill={ICON_COLOR} />
+              </div>
+              <div
+                onClick={() => {
+                  setNewRoomDialog(true);
+                }}
+                className={`${
+                  !showRooms ? "d-none" : ""
+                } btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+                style={{
+                  borderRadius: "50%",
+                  width: 30,
+                  height: 30,
+                  zIndex: 20,
+                }}
+              >
+                <PlusRoundIcon width={15} height={15} fill={ICON_COLOR} />
+              </div>
+              <div
+                onClick={() => {
+                  // setNewRoomDialog(true);
+                }}
+                className={`${
+                  !showRooms ? "d-none" : ""
+                } btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+                style={{
+                  borderRadius: "50%",
+                  width: 30,
+                  height: 30,
+                  zIndex: 20,
+                }}
+              >
+                <SearchIcon width={15} height={15} fill={ICON_COLOR} />
+              </div>
             </div>
             <div
               className="transition bg-primary position-absolute h-100"
               style={{
-                transform: showRooms ? "translateX(0)" : "translateX(-1000px)",
+                transform: showRooms ? "translateX(0)" : "translateX(-8rem)",
                 width: "8rem",
                 fontSize: "0.75rem",
                 paddingTop: "4rem",
@@ -283,19 +454,25 @@ export const ChatPage = () => {
                   <button
                     onClick={() => {
                       setActiveRoom(item.id);
-                      setShowRooms(false);
+                      if (isMobile) {
+                        setShowRooms(false);
+                      }
                     }}
                     key={index}
-                    className="my-2 bg-primary text-white px-3 py-1"
+                    className="my-2 bg-primary text-white px-3 py-1 w-100"
                   >
-                    {item.name}
+                    <div className="text-break">{item.name}</div>
+                    <div className="text-break">{item.id}</div>
                   </button>
                 )
               )}
             </div>
           </div>
         </div>
-        <div className="room-title d-none d-sm-block border-bottom text-center py-3 shadow">
+        <div
+          ref={headerRef}
+          className="room-title d-none d-sm-block border-bottom text-center py-3 shadow"
+        >
           Realtime Chat Room
         </div>
         <div
@@ -387,7 +564,7 @@ export const ChatPage = () => {
                     type="submit"
                     // disabled={loginLoading}
                   >
-                    <ReadyRoundIcon width={40} height={40} fill={"#fff"} />
+                    <ReadyRoundIcon width={40} height={40} fill={ICON_COLOR} />
                   </button>
                 </div>
                 <div className="mt-4 text-center"></div>
@@ -417,7 +594,7 @@ export const ChatPage = () => {
           setNewRoomDialog(false);
         }}
         onConfirm={(e) => {
-          handleAddNewRoom(e)
+          handleAddNewRoom(e);
         }}
       />
     </div>
