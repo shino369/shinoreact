@@ -324,10 +324,7 @@ export const ChatPage = () => {
             }}
           >
             {[{ name: "public", id: "public" }, ...rooms].map((item, index) => (
-              <div
-                key={index}
-                className="mb-1 text-white p-0 text-start w-100"
-              >
+              <div key={index} className="mb-1 text-white p-0 text-start w-100">
                 <div
                   onClick={() => {
                     setActiveRoom(item.id);
@@ -439,7 +436,7 @@ export const ChatPage = () => {
               </div>
             </div>
             <div
-              className="transition bg-primary position-absolute h-100"
+              className="transition shadow pe-1 bg-primary position-absolute h-100"
               style={{
                 transform: showRooms ? "translateX(0)" : "translateX(-8rem)",
                 width: "8rem",
@@ -451,19 +448,41 @@ export const ChatPage = () => {
             >
               {[{ name: "public", id: "public" }, ...rooms].map(
                 (item, index) => (
-                  <button
-                    onClick={() => {
-                      setActiveRoom(item.id);
-                      if (isMobile) {
-                        setShowRooms(false);
-                      }
-                    }}
+                  <div
                     key={index}
-                    className="my-2 bg-primary text-white px-3 py-1 w-100"
+                    className="mb-1 text-white p-0 text-start w-100"
                   >
-                    <div className="text-break">{item.name}</div>
-                    <div className="text-break">{item.id}</div>
-                  </button>
+                    <div
+                      onClick={() => {
+                        setActiveRoom(item.id);
+                        isMobile && setShowRooms(false);
+                      }}
+                      className="px-2 bg-chat pointer d-flex w-100 justify-content-between align-items-center"
+                    >
+                      <div className="col">{item.name}</div>
+                      <div className="col-2 py-2">
+                        <ArrowRightLineIcon
+                          width={20}
+                          height={20}
+                          fill={ICON_COLOR}
+                        />
+                      </div>
+                    </div>
+                    {item.id !== "public" && (
+                      <div className="px-2 d-flex align-items-center">
+                        <div className="text-break col">{item.id}</div>
+                        <div
+                          onClick={() => {
+                            // copy text to clipboard
+                            navigator.clipboard.writeText(item.id);
+                          }}
+                          className="col-2 d-flex justify-content-end pointer"
+                        >
+                          <CopyIcon width={15} height={15} fill={ICON_COLOR} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 )
               )}
             </div>

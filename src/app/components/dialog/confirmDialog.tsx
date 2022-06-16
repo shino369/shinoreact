@@ -74,10 +74,10 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
       onClose={onCancel}
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle><span style={{fontSize: '1rem'}}>{title}</span></DialogTitle>
       <DialogContent className={`${withInput? 'pb-0' : ''}`}>
         <div>
-          <div>{message}</div>
+          <div style={{fontSize: '0.8rem'}}>{message}</div>
           {withInput && (
             <Formik
               innerRef={formikRef}
