@@ -292,9 +292,14 @@ export const ChatPage = () => {
 
   // delete message
   const deleteChatItem = useCallback(async (id: string) => {
-    const res = await deleteDoc(doc(db, "messages", id));
+    if(activeRoom === 'public') {
+      const res = await deleteDoc(doc(db, "messages", id));
+    }else{
+      const res = await deleteDoc(doc(db, "rooms", activeRoom, "messages", id));
+    }
+
     // console.log(res);
-  }, []);
+  }, [activeRoom]);
 
   // after confirm dialog
   const handleOptions = () => {
