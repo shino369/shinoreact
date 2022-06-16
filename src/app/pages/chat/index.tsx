@@ -25,6 +25,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  updateDoc,
   deleteDoc,
   limit,
   onSnapshot,
@@ -48,6 +49,7 @@ import "./index.scss";
 // component
 import { ChatItem, Icon, InputField } from "app/components";
 import ConfimrDialog from "app/components/dialog/confirmDialog";
+import { toast } from "react-toastify";
 
 const Schema = Yup.object().shape({
   msg: Yup.string().required("required"),
@@ -59,7 +61,7 @@ type FormItem = {
 
 const ICON_COLOR = "#fff";
 const CHAT_TOP_HEIGHT = "3.5rem";
-const ICON_SIZE = 15
+const ICON_SIZE = 15;
 
 interface PendingAction {
   action: string;
@@ -78,6 +80,7 @@ export const ChatPage = () => {
   const [activeRoom, setActiveRoom] = useState<string>("public");
   const [rooms, setRooms] = useState<any[]>([]);
   const [newRoomDialog, setNewRoomDialog] = useState<boolean>(false);
+  const [joinRoomDialog, setJoinRoomDialog] = useState<boolean>(false);
 
   const [paddingBottom, setPaddingBottom] = useState<string>(
     isMobile ? "7rem" : "1rem"
@@ -217,6 +220,29 @@ export const ChatPage = () => {
     [user]
   );
 
+  const handleJoinRoom = useCallback(
+    async (room: any) => {
+      const roomRef = doc(db, "rooms", room);
+      const roomData = await getDoc(roomRef);
+      if (roomData.exists()) {
+        const members = roomData.data().members;
+        if (members.includes(user!.uid)) {
+          setActiveRoom(room);
+          setJoinRoomDialog(false);
+        } else {
+          // add user into members
+          await updateDoc(roomRef, {
+            members: [...members, user!.uid],
+          });
+          setActiveRoom(room);
+        }
+      } else {
+        toast.error("Room not found");
+      }
+    },
+    [user]
+  );
+
   // handle form submit new message
   const onSubmit = async (
     values: FormItem,
@@ -307,7 +333,11 @@ export const ChatPage = () => {
                 zIndex: 20,
               }}
             >
-              <PeoplesIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+              <PeoplesIcon
+                width={ICON_SIZE}
+                height={ICON_SIZE}
+                fill={ICON_COLOR}
+              />
             </div>
             <div
               onClick={() => {
@@ -323,11 +353,15 @@ export const ChatPage = () => {
                 zIndex: 20,
               }}
             >
-              <PlusRoundIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+              <PlusRoundIcon
+                width={ICON_SIZE}
+                height={ICON_SIZE}
+                fill={ICON_COLOR}
+              />
             </div>
             <div
               onClick={() => {
-                // setNewRoomDialog(true);
+                setJoinRoomDialog(true);
               }}
               className={`${
                 !showRooms ? "d-none" : ""
@@ -339,7 +373,11 @@ export const ChatPage = () => {
                 zIndex: 20,
               }}
             >
-              <SearchIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+              <SearchIcon
+                width={ICON_SIZE}
+                height={ICON_SIZE}
+                fill={ICON_COLOR}
+              />
             </div>
           </div>
 
@@ -382,7 +420,11 @@ export const ChatPage = () => {
                       }}
                       className="col-2 d-flex justify-content-end pointer"
                     >
-                      <CopyIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+                      <CopyIcon
+                        width={ICON_SIZE}
+                        height={ICON_SIZE}
+                        fill={ICON_COLOR}
+                      />
                     </div>
                   </div>
                 )}
@@ -431,7 +473,11 @@ export const ChatPage = () => {
                   zIndex: 20,
                 }}
               >
-                <PeoplesIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+                <PeoplesIcon
+                  width={ICON_SIZE}
+                  height={ICON_SIZE}
+                  fill={ICON_COLOR}
+                />
               </div>
               <div
                 onClick={() => {
@@ -447,11 +493,15 @@ export const ChatPage = () => {
                   zIndex: 20,
                 }}
               >
-                <PlusRoundIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+                <PlusRoundIcon
+                  width={ICON_SIZE}
+                  height={ICON_SIZE}
+                  fill={ICON_COLOR}
+                />
               </div>
               <div
                 onClick={() => {
-                  // setNewRoomDialog(true);
+                  setJoinRoomDialog(true);
                 }}
                 className={`${
                   !showRooms ? "d-none" : ""
@@ -463,7 +513,11 @@ export const ChatPage = () => {
                   zIndex: 20,
                 }}
               >
-                <SearchIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+                <SearchIcon
+                  width={ICON_SIZE}
+                  height={ICON_SIZE}
+                  fill={ICON_COLOR}
+                />
               </div>
             </div>
             <div
@@ -509,7 +563,11 @@ export const ChatPage = () => {
                           }}
                           className="col-2 d-flex justify-content-end pointer"
                         >
-                          <CopyIcon width={ICON_SIZE} height={ICON_SIZE} fill={ICON_COLOR} />
+                          <CopyIcon
+                            width={ICON_SIZE}
+                            height={ICON_SIZE}
+                            fill={ICON_COLOR}
+                          />
                         </div>
                       </div>
                     )}
@@ -649,6 +707,18 @@ export const ChatPage = () => {
         }}
         onConfirm={(e) => {
           handleAddNewRoom(e);
+        }}
+      />
+      <ConfimrDialog
+        open={joinRoomDialog}
+        title={"Join room"}
+        message={"Please input Room ID to join a room."}
+        withInput
+        onCancel={() => {
+          setJoinRoomDialog(false);
+        }}
+        onConfirm={(e) => {
+          handleJoinRoom(e);
         }}
       />
     </div>
