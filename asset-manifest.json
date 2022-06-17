@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/shinoreact/static/css/main.40e648d4.css",
-    "main.js": "/shinoreact/static/js/main.57a0d289.js",
+    "main.css": "/shinoreact/static/css/main.6b3765d7.css",
+    "main.js": "/shinoreact/static/js/main.4c660ce0.js",
     "static/css/841.a942e30a.chunk.css": "/shinoreact/static/css/841.a942e30a.chunk.css",
     "static/js/841.6ab6e7f0.chunk.js": "/shinoreact/static/js/841.6ab6e7f0.chunk.js",
     "static/css/877.62fab1a7.chunk.css": "/shinoreact/static/css/877.62fab1a7.chunk.css",
@@ -11,11 +11,11 @@
     "static/js/956.d6c6ba9b.chunk.js": "/shinoreact/static/js/956.d6c6ba9b.chunk.js",
     "static/css/521.3bf672a3.chunk.css": "/shinoreact/static/css/521.3bf672a3.chunk.css",
     "static/js/521.6d58362b.chunk.js": "/shinoreact/static/js/521.6d58362b.chunk.js",
-    "static/css/316.4c2f5c2b.chunk.css": "/shinoreact/static/css/316.4c2f5c2b.chunk.css",
-    "static/js/316.6941ef6c.chunk.js": "/shinoreact/static/js/316.6941ef6c.chunk.js",
+    "static/css/316.397f51a5.chunk.css": "/shinoreact/static/css/316.397f51a5.chunk.css",
+    "static/js/316.3a330de0.chunk.js": "/shinoreact/static/js/316.3a330de0.chunk.js",
     "static/js/787.b464cf3c.chunk.js": "/shinoreact/static/js/787.b464cf3c.chunk.js",
     "static/js/681.e8073b0f.chunk.js": "/shinoreact/static/js/681.e8073b0f.chunk.js",
-    "static/js/829.02e2d5a1.chunk.js": "/shinoreact/static/js/829.02e2d5a1.chunk.js",
+    "static/js/949.b56c6be8.chunk.js": "/shinoreact/static/js/949.b56c6be8.chunk.js",
     "static/js/896.0d75eb2d.chunk.js": "/shinoreact/static/js/896.0d75eb2d.chunk.js",
     "static/media/jdclab.jpg": "/shinoreact/static/media/jdclab.d43c519c2df46dacb852.jpg",
     "static/media/whatsapp.png": "/shinoreact/static/media/whatsapp.8f5bb9a0662eb2b4b266.png",
@@ -37,8 +37,8 @@
     "static/media/arrow-down.svg": "/shinoreact/static/media/arrow-down.1ce8219bd49d9a8ec377dbe00bba857f.svg",
     "static/media/options.svg": "/shinoreact/static/media/options.ea85c6324da1bf14cb59cf928c071a3a.svg",
     "static/media/protected.svg": "/shinoreact/static/media/protected.e596a357c88ada8b2b99fe8d7a3cd683.svg",
-    "main.40e648d4.css.map": "/shinoreact/static/css/main.40e648d4.css.map",
-    "main.57a0d289.js.map": "/shinoreact/static/js/main.57a0d289.js.map",
+    "main.6b3765d7.css.map": "/shinoreact/static/css/main.6b3765d7.css.map",
+    "main.4c660ce0.js.map": "/shinoreact/static/js/main.4c660ce0.js.map",
     "841.a942e30a.chunk.css.map": "/shinoreact/static/css/841.a942e30a.chunk.css.map",
     "841.6ab6e7f0.chunk.js.map": "/shinoreact/static/js/841.6ab6e7f0.chunk.js.map",
     "877.62fab1a7.chunk.css.map": "/shinoreact/static/css/877.62fab1a7.chunk.css.map",
@@ -48,15 +48,15 @@
     "956.d6c6ba9b.chunk.js.map": "/shinoreact/static/js/956.d6c6ba9b.chunk.js.map",
     "521.3bf672a3.chunk.css.map": "/shinoreact/static/css/521.3bf672a3.chunk.css.map",
     "521.6d58362b.chunk.js.map": "/shinoreact/static/js/521.6d58362b.chunk.js.map",
-    "316.4c2f5c2b.chunk.css.map": "/shinoreact/static/css/316.4c2f5c2b.chunk.css.map",
-    "316.6941ef6c.chunk.js.map": "/shinoreact/static/js/316.6941ef6c.chunk.js.map",
+    "316.397f51a5.chunk.css.map": "/shinoreact/static/css/316.397f51a5.chunk.css.map",
+    "316.3a330de0.chunk.js.map": "/shinoreact/static/js/316.3a330de0.chunk.js.map",
     "787.b464cf3c.chunk.js.map": "/shinoreact/static/js/787.b464cf3c.chunk.js.map",
     "681.e8073b0f.chunk.js.map": "/shinoreact/static/js/681.e8073b0f.chunk.js.map",
-    "829.02e2d5a1.chunk.js.map": "/shinoreact/static/js/829.02e2d5a1.chunk.js.map",
+    "949.b56c6be8.chunk.js.map": "/shinoreact/static/js/949.b56c6be8.chunk.js.map",
     "896.0d75eb2d.chunk.js.map": "/shinoreact/static/js/896.0d75eb2d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.40e648d4.css",
-    "static/js/main.57a0d289.js"
+    "static/css/main.6b3765d7.css",
+    "static/js/main.4c660ce0.js"
   ]
 }
