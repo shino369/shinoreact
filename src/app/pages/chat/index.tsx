@@ -301,6 +301,7 @@ export const ChatPage = () => {
             members: [...members, user!.uid],
           });
           setActiveRoom({ id: roomData.id, name: roomData.data().name });
+          setModalAction({ action: "", isOpen: false });
         }
       } else {
         toast("ERROR 404: Room not found", {
@@ -314,10 +315,13 @@ export const ChatPage = () => {
   );
 
   const handleLeaveRoom = useCallback(async () => {
-    const roomRef = doc(db, "rooms", activeRoom.id);
-    const newMemberList = activeMembers.filter((mem) => mem.uid !== user!.uid);
-    await updateDoc(roomRef, { members: newMemberList });
+    if(activeRoom.id !== "public") {
+      const roomRef = doc(db, "rooms", activeRoom.id);
+      const newMemberList = activeMembers.filter((mem) => mem.uid !== user!.uid);
+      await updateDoc(roomRef, { members: newMemberList });
+    }
     setActiveRoom({ id: "public", name: "Public" });
+    setModalAction({ action: "", isOpen: false });
   }, [activeMembers]);
 
   // handle form submit new message
