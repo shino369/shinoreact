@@ -23,6 +23,7 @@ import {
   query,
   where,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "app/hooks/firebase";
 
@@ -47,7 +48,6 @@ export const LoginPage = () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
     try {
-      
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       dispatch(setAuthenticated(true));
@@ -61,18 +61,29 @@ export const LoginPage = () => {
       if (!docSnap.exists()) {
         const userData = {
           uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          role: "user",
+          email: user.email || "",
+          displayName: user.displayName || "",
+          photoURL: user.photoURL || "",
+          role: "user" || "",
           createdAt: Timestamp.now(),
           updatedAt: Timestamp.now(),
         };
         await setDoc(doc(db, "users", user.uid), userData);
+      }else{
+        // update existing user
+        const userData = {
+          displayName: user.displayName || "",
+          photoURL: user.photoURL || "",
+          updatedAt: Timestamp.now(),
+        };
+        await updateDoc(doc(db, "users", user.uid), userData);
       }
 
       dispatch(setLoading(false));
-      navigation("/chat");
+      setTimeout(() => {
+        console.log("navigate to chat");
+        navigation("/chat");
+      }, 500);
     } catch (error) {
       console.log(error);
       dispatch(setLoading(false));
@@ -87,8 +98,8 @@ export const LoginPage = () => {
           fontSize: "0.8rem",
         }}
       >
-        Make use of firebase authentication
-        Please enable broswer popup for login
+        Make use of firebase authentication Please enable broswer popup for
+        login
       </p>
       <button
         onClick={handleLoginGoogle}

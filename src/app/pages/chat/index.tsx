@@ -12,6 +12,7 @@ import PlusRoundIcon from "@rsuite/icons/PlusRound";
 import SearchIcon from "@rsuite/icons/Search";
 import CopyIcon from "@rsuite/icons/Copy";
 import ArrowRightLineIcon from "@rsuite/icons/ArrowRightLine";
+import ExitIcon from "@rsuite/icons/Exit";
 
 // form
 import { Input, Table } from "reactstrap";
@@ -68,19 +69,34 @@ interface PendingAction {
   id: string;
 }
 
+interface Room {
+  id: string;
+  name: string;
+}
+
+interface ModalAction {
+  action: string;
+  isOpen: boolean;
+}
+
 export const ChatPage = () => {
   const { user } = useSelector((rootState: RootState) => rootState.auth);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery({ query: `(max-width: 576px)` });
   const [newMessage, setNewMessage] = useState<any[]>([]);
   const [visible, setVisible] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [pendingAction, setPendingAction] = useState<PendingAction>();
   const [showRooms, setShowRooms] = useState<boolean>(!isMobile);
-  const [activeRoom, setActiveRoom] = useState<string>("public");
+  const [activeRoom, setActiveRoom] = useState<Room>({
+    id: "public",
+    name: "public",
+  });
+  const [activeMembers, setActiveMembers] = useState<any[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
-  const [newRoomDialog, setNewRoomDialog] = useState<boolean>(false);
-  const [joinRoomDialog, setJoinRoomDialog] = useState<boolean>(false);
+  const [modalAction, setModalAction] = useState<ModalAction>({
+    action: "",
+    isOpen: false,
+  });
 
   const [paddingBottom, setPaddingBottom] = useState<string>(
     isMobile ? "7rem" : "1rem"
@@ -95,14 +111,14 @@ export const ChatPage = () => {
 
   // change query when activeRoom change
   useEffect(() => {
-    if (activeRoom === "public") {
+    if (activeRoom.id === "public") {
       setQuerying(
         query(collection(db, "messages"), orderBy("createdAt"), limit(100))
       );
     } else {
       setQuerying(
         query(
-          collection(db, "rooms", activeRoom, "messages"),
+          collection(db, "rooms", activeRoom.id, "messages"),
           orderBy("createdAt"),
           limit(100)
         )
@@ -111,6 +127,65 @@ export const ChatPage = () => {
   }, [activeRoom]);
 
   const messages = useFirestoreQuery(querying);
+
+  // get rooms list and set active user
+  const getTotalRooms = useCallback(
+    async (msgs: any) => {
+      const roomQ = query(
+        collection(db, "rooms"),
+        where("members", "array-contains", user!.uid)
+      );
+      const querySnapshotRoom = await getDocs(roomQ);
+      let roomTotal: any = [];
+      querySnapshotRoom.forEach((doc) => {
+        roomTotal.push({ id: doc.id, ...doc.data() });
+      });
+
+      if (activeRoom.id !== "public") {
+        const roomDetail = roomTotal.find(
+          (room: any) => room.id === activeRoom.id
+        );
+        const userQ = query(
+          collection(db, "users"),
+          where("uid", "in", roomDetail.members)
+        );
+        const querySnapshotUser = await getDocs(userQ);
+        let members: any = [];
+        querySnapshotUser.forEach((doc) => {
+          members.push({ id: doc.id, ...doc.data() });
+        });
+        setActiveMembers(members);
+        console.log(members);
+      } else if (activeRoom.id === "public") {
+        // remove duplicate from message by uid
+        const unique = _.uniqBy(msgs, "uid").map((f: any) => ({
+          photoURL: f.photoURL,
+          displayName: f.displayName,
+          uid: f.uid,
+        }));
+        setActiveMembers(unique);
+      }
+
+      setRooms(roomTotal);
+      console.log("triggered");
+    },
+    [activeRoom]
+  );
+
+  // scroll to bottom when new message come
+  useEffect(() => {
+    isMobile
+      ? window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        })
+      : scrollRef.current.scrollTo({
+          top: scrollRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+
+    getTotalRooms(messages);
+  }, [messages, getTotalRooms]);
 
   /*
   fake data to prevent heavy read of firestore in testing
@@ -129,38 +204,6 @@ export const ChatPage = () => {
   useEffect(() => {
     dispatch(setActiveRoute("chat"));
   }, [dispatch]);
-
-  // scroll to bottom when new message come
-  useEffect(() => {
-    isMobile
-      ? window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        })
-      : scrollRef.current.scrollTo({
-          top: scrollRef.current.scrollHeight,
-          behavior: "smooth",
-        });
-  }, [messages]);
-
-  // get rooms list
-  const getTotalRooms = useCallback(async () => {
-    const q = query(
-      collection(db, "rooms"),
-      where("members", "array-contains", user!.uid)
-    );
-    const querySnapshot = await getDocs(q);
-    let roomTotal: any = [];
-    querySnapshot.forEach((doc) => {
-      roomTotal.push({ id: doc.id, ...doc.data() });
-    });
-    setRooms(roomTotal);
-  }, [user]);
-
-  // refresh list when activeRoom change
-  useEffect(() => {
-    getTotalRooms();
-  }, [activeRoom, getTotalRooms]);
 
   // scroll to bottom button effect (body in mobile)
   useEffect(() => {
@@ -214,8 +257,8 @@ export const ChatPage = () => {
         createdAt: Timestamp.now(),
       });
 
-      setNewRoomDialog(false);
-      setActiveRoom(newRoom.id);
+      setModalAction({action: '' ,isOpen: false});
+      setActiveRoom({ id: newRoom.id, name: room });
     },
     [user]
   );
@@ -227,21 +270,32 @@ export const ChatPage = () => {
       if (roomData.exists()) {
         const members = roomData.data().members;
         if (members.includes(user!.uid)) {
-          setActiveRoom(room);
-          setJoinRoomDialog(false);
+          setActiveRoom({ id: roomData.id, name: roomData.data().name });
+          setModalAction({action: '' ,isOpen: false});
         } else {
           // add user into members
           await updateDoc(roomRef, {
             members: [...members, user!.uid],
           });
-          setActiveRoom(room);
+          setActiveRoom({ id: roomData.id, name: roomData.data().name });
         }
       } else {
-        toast.error("Room not found");
+        toast("ERROR 404: Room not found", {
+          theme: "colored",
+          position: isMobile ? "top-center" : "top-right",
+          className: "opacity-toast text-white",
+        });
       }
     },
     [user]
   );
+
+  const handleLeaveRoom = useCallback(async () => {
+    const roomRef = doc(db, "rooms", activeRoom.id);
+    const newMemberList = activeMembers.filter((mem) => mem.uid !== user!.uid);
+    await updateDoc(roomRef, { members: newMemberList });
+    setActiveRoom({ id: "public", name: "Public" });
+  }, [activeMembers]);
 
   // handle form submit new message
   const onSubmit = async (
@@ -252,9 +306,9 @@ export const ChatPage = () => {
     const trimmed = msg.trim();
     if (trimmed.length > 0) {
       const _q =
-        activeRoom === "public"
+        activeRoom.id === "public"
           ? collection(db, "messages")
-          : collection(db, "rooms", activeRoom, "messages");
+          : collection(db, "rooms", activeRoom.id, "messages");
 
       const message = {
         uid: user!.uid,
@@ -293,11 +347,11 @@ export const ChatPage = () => {
   // delete message
   const deleteChatItem = useCallback(
     async (id: string) => {
-      if (activeRoom === "public") {
+      if (activeRoom.id === "public") {
         const res = await deleteDoc(doc(db, "messages", id));
       } else {
         const res = await deleteDoc(
-          doc(db, "rooms", activeRoom, "messages", id)
+          doc(db, "rooms", activeRoom.id, "messages", id)
         );
       }
 
@@ -312,7 +366,7 @@ export const ChatPage = () => {
       deleteChatItem(pendingAction.id);
     }
     setPendingAction(undefined);
-    setIsOpen(false);
+    setModalAction({ action: "", isOpen: false });
   };
 
   return (
@@ -333,25 +387,7 @@ export const ChatPage = () => {
           >
             <div
               onClick={() => {
-                setShowRooms(!showRooms);
-              }}
-              className="d-sm-none btn ms-1 mt-1 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
-              style={{
-                borderRadius: "50%",
-                width: 30,
-                height: 30,
-                zIndex: 20,
-              }}
-            >
-              <PeoplesIcon
-                width={ICON_SIZE}
-                height={ICON_SIZE}
-                fill={ICON_COLOR}
-              />
-            </div>
-            <div
-              onClick={() => {
-                setNewRoomDialog(true);
+                setModalAction({action: 'add' ,isOpen: true});
               }}
               className={`${
                 !showRooms ? "d-none" : ""
@@ -371,7 +407,7 @@ export const ChatPage = () => {
             </div>
             <div
               onClick={() => {
-                setJoinRoomDialog(true);
+                setModalAction({action: 'join' ,isOpen: true});
               }}
               className={`${
                 !showRooms ? "d-none" : ""
@@ -392,12 +428,12 @@ export const ChatPage = () => {
           </div>
 
           <div
-            className="transition me-1 overflow-scroll"
+            className="transition me-1 overflow-auto border-bottom-chat"
             style={{
-              // transform: showRooms ? "translateX(0)" : "translateX(-8rem)",
-              width: "8rem",
+              // transform: showRooms ? "translateX(0)" : "translateX(-12rem)",
+              width: "12rem",
               fontSize: "0.75rem",
-
+              height: "calc(50% - 3.5rem)",
               left: "0px",
               zIndex: 10,
             }}
@@ -406,15 +442,15 @@ export const ChatPage = () => {
               <div key={index} className="mb-1 text-white p-0 text-start w-100">
                 <div
                   onClick={() => {
-                    if (activeRoom !== item.id) {
-                      setActiveRoom(item.id);
+                    if (activeRoom.id !== item.id) {
+                      setActiveRoom({ id: item.id, name: item.name });
                     }
                     isMobile && setShowRooms(false);
                   }}
                   className="px-2 bg-chat pointer d-flex w-100 justify-content-between align-items-center"
                 >
                   <div className="col">{item.name}</div>
-                  <div className="col-2 py-2">
+                  <div className="col-2 py-2 d-flex justify-content-center">
                     <ArrowRightLineIcon
                       width={20}
                       height={20}
@@ -423,14 +459,19 @@ export const ChatPage = () => {
                   </div>
                 </div>
                 {item.id !== "public" && (
-                  <div className="px-2 d-flex align-items-center">
+                  <div className="px-2 d-flex align-items-center py-2">
                     <div className="text-break col">{item.id}</div>
                     <div
                       onClick={() => {
                         // copy text to clipboard
                         navigator.clipboard.writeText(item.id);
+                        toast("Room ID Copied to clipboard", {
+                          theme: "colored",
+                          position: "top-right",
+                          className: "opacity-toast text-white",
+                        });
                       }}
-                      className="col-2 d-flex justify-content-end pointer"
+                      className="col-2 d-flex justify-content-center pointer"
                     >
                       <CopyIcon
                         width={ICON_SIZE}
@@ -442,6 +483,51 @@ export const ChatPage = () => {
                 )}
               </div>
             ))}
+          </div>
+          <div className="text-white" style={{ flexGrow: 1 }}>
+            <div
+              className="my-2 ms-2 d-flex align-items-center justify-content-between"
+              style={{ fontSize: "0.75rem" }}
+            >
+              Member :
+              <div>
+                <div
+                  onClick={() => {
+                    setModalAction({action: 'leave' ,isOpen: true});
+                  }}
+                  className={`${
+                    activeRoom.id === "public" ? "d-none" : ""
+                  } btn me-1 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+                  style={{
+                    borderRadius: "50%",
+                    width: 30,
+                    height: 30,
+                    zIndex: 20,
+                  }}
+                >
+                  <ExitIcon
+                    width={ICON_SIZE}
+                    height={ICON_SIZE}
+                    fill={ICON_COLOR}
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              {activeMembers.map((item, index) => (
+                <img
+                  key={index}
+                  style={{
+                    width: "1.5rem",
+                    height: "1.5rem",
+                    borderRadius: "50%",
+                    marginLeft: "0.5rem",
+                  }}
+                  src={item.photoURL}
+                  alt="avatar"
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -477,27 +563,23 @@ export const ChatPage = () => {
                 onClick={() => {
                   setShowRooms(!showRooms);
                 }}
-                className="btn ms-1 mt-1 bg-dark pointer hover-opacity p-0 d-flex justify-content-center align-items-center"
                 style={{
-                  borderRadius: "50%",
-                  width: 30,
-                  height: 30,
                   zIndex: 20,
+                  minHeight: "30px",
                 }}
+                className={`rounded-pill pointer badge p-2 mt-1 ms-1 shadow ${
+                  showRooms ? "d-none" : "bg-dark"
+                }`}
               >
-                <PeoplesIcon
-                  width={ICON_SIZE}
-                  height={ICON_SIZE}
-                  fill={ICON_COLOR}
-                />
+                {activeRoom.name}
               </div>
               <div
                 onClick={() => {
-                  setNewRoomDialog(true);
+                  setModalAction({action: 'add' ,isOpen: true});
                 }}
                 className={`${
                   !showRooms ? "d-none" : ""
-                } btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+                } btn ms-1 bg-chat mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
                 style={{
                   borderRadius: "50%",
                   width: 30,
@@ -513,11 +595,11 @@ export const ChatPage = () => {
               </div>
               <div
                 onClick={() => {
-                  setJoinRoomDialog(true);
+                  setModalAction({action: 'join' ,isOpen: true});
                 }}
                 className={`${
                   !showRooms ? "d-none" : ""
-                } btn ms-1 bg-dark mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+                } btn ms-1 bg-chat mt-1 pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
                 style={{
                   borderRadius: "50%",
                   width: 30,
@@ -533,64 +615,114 @@ export const ChatPage = () => {
               </div>
             </div>
             <div
-              className="transition shadow pe-1 bg-primary position-absolute h-100"
+              className="transition pe-1 shadow bg-primary position-absolute h-100"
               style={{
-                transform: showRooms ? "translateX(0)" : "translateX(-8rem)",
-                width: "8rem",
+                transform: showRooms ? "translateX(0)" : "translateX(-12rem)",
+                width: "12rem",
                 fontSize: "0.75rem",
                 paddingTop: "4rem",
                 left: "0px",
                 zIndex: 10,
               }}
             >
-              {[{ name: "public", id: "public" }, ...rooms].map(
-                (item, index) => (
-                  <div
-                    key={index}
-                    className="mb-1 text-white p-0 text-start w-100"
-                  >
+              <div className="h-50 border-bottom-chat overflow-auto">
+                {[{ name: "public", id: "public" }, ...rooms].map(
+                  (item, index) => (
                     <div
-                      onClick={() => {
-                        if (activeRoom !== item.id) {
-                          setActiveRoom(item.id);
-                        }
-                        isMobile && setShowRooms(false);
-                      }}
-                      className="px-2 bg-chat pointer d-flex w-100 justify-content-between align-items-center"
+                      key={index}
+                      className="mb-1 text-white p-0 text-start w-100"
                     >
-                      <div className="col">{item.name}</div>
-                      <div className="col-2 py-2">
-                        <ArrowRightLineIcon
-                          width={20}
-                          height={20}
-                          fill={ICON_COLOR}
-                        />
-                      </div>
-                    </div>
-                    {item.id !== "public" && (
-                      <div className="px-2 d-flex align-items-center">
-                        <div className="text-break col">{item.id}</div>
-                        <div
-                          onClick={() => {
-                            // copy text to clipboard
-                            navigator.clipboard.writeText(item.id);
-                          }}
-                          className="col-2 d-flex justify-content-end pointer"
-                        >
-                          <CopyIcon
-                            width={ICON_SIZE}
-                            height={ICON_SIZE}
+                      <div
+                        onClick={() => {
+                          if (activeRoom.id !== item.id) {
+                            setActiveRoom({ id: item.id, name: item.name });
+                          }
+                          isMobile && setShowRooms(false);
+                        }}
+                        className="px-2 bg-chat pointer d-flex w-100 justify-content-between align-items-center"
+                      >
+                        <div className="col">{item.name}</div>
+                        <div className="col-2 py-2 d-flex justify-content-center">
+                          <ArrowRightLineIcon
+                            width={20}
+                            height={20}
                             fill={ICON_COLOR}
                           />
                         </div>
                       </div>
-                    )}
+                      {item.id !== "public" && (
+                        <div className="px-2 d-flex align-items-center py-2">
+                          <div className="text-break col">{item.id}</div>
+                          <div
+                            onClick={() => {
+                              // copy text to clipboard
+                              navigator.clipboard.writeText(item.id);
+                              toast("Room ID Copied to clipboard", {
+                                theme: "colored",
+                                position: "top-center",
+                                className: "opacity-toast text-white",
+                              });
+                            }}
+                            className="col-2 d-flex justify-content-center pointer"
+                          >
+                            <CopyIcon
+                              width={ICON_SIZE}
+                              height={ICON_SIZE}
+                              fill={ICON_COLOR}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                )}
+              </div>
+              <div className="text-white" style={{ flexGrow: 1 }}>
+                <div className="my-2 ms-2 d-flex justify-content-between align-items-center">
+                  Member :
+                  <div>
+                    <div
+                      onClick={() => {
+                        setModalAction({action: 'leave' ,isOpen: true});
+                      }}
+                      className={`${
+                        activeRoom.id === "public" ? "d-none" : ""
+                      } btn me-1 bg-chat pointer hover-opacity p-0 d-flex justify-content-center align-items-center`}
+                      style={{
+                        borderRadius: "50%",
+                        width: 30,
+                        height: 30,
+                        zIndex: 20,
+                      }}
+                    >
+                      <ExitIcon
+                        width={ICON_SIZE}
+                        height={ICON_SIZE}
+                        fill={ICON_COLOR}
+                      />
+                    </div>
                   </div>
-                )
-              )}
+                </div>
+                <div>
+                  {activeMembers.map((item, index) => (
+                    <img
+                      key={index}
+                      style={{
+                        width: "1.5rem",
+                        height: "1.5rem",
+                        borderRadius: "50%",
+                        marginLeft: "0.5rem",
+                      }}
+                      src={item.photoURL}
+                      alt="avatar"
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <div
           ref={headerRef}
           className="room-title d-none d-sm-flex justify-content-center align-items-center border-bottom text-center shadow"
@@ -599,7 +731,7 @@ export const ChatPage = () => {
             fontSize: "1rem",
           }}
         >
-          Realtime Chat Room
+          {activeRoom.name}
         </div>
         <div
           onClick={() => {
@@ -643,7 +775,7 @@ export const ChatPage = () => {
               createdAt={item.createdAt}
               onPress={(action) => {
                 setPendingAction({ action: action, id: item.id });
-                setIsOpen(true);
+                setModalAction({ action: "delete", isOpen: true });
               }}
             />
           ))}
@@ -700,19 +832,57 @@ export const ChatPage = () => {
         </div>
       </div>
       <ConfimrDialog
-        open={isOpen}
-        title={"Confirm delete?"}
-        message={"Deleted content cannot be recovered."}
+        open={modalAction.isOpen}
+        title={
+          modalAction.action === "delete"
+            ? "Confirm delete?"
+            : modalAction.action === "add"
+            ? "Add new room"
+            : modalAction.action === "join"
+            ? "Join room"
+            : modalAction.action === "leave"
+            ? "Leave room"
+            : ""
+        }
+        withInput={ ['add', 'join'].includes(modalAction.action)}
+        message={
+          modalAction.action === "delete"
+          ? "Deleted content cannot be recovered."
+          : modalAction.action === "add"
+          ? "Please input room name."
+          : modalAction.action === "join"
+          ? "Please input Room ID to join a room."
+          : modalAction.action === "leave"
+          ? "Confirm to leave this room?"
+          : ""
+          
+          
+        }
         onCancel={() => {
-          setPendingAction(undefined);
-          setIsOpen(false);
+          if(modalAction.action === "delete"){
+            setPendingAction(undefined);
+          }
+          setModalAction({action: '' ,isOpen: false});
         }}
-        onConfirm={() => {
-          handleOptions();
+        onConfirm={(e) => {
+          switch(modalAction.action){
+            case "delete":
+              handleOptions();
+              break;
+            case "add":
+              handleAddNewRoom(e);
+              break;
+            case "join":
+              handleJoinRoom(e);
+              break;
+            case "leave":
+              handleLeaveRoom();
+          }
+          
         }}
       />
-      <ConfimrDialog
-        open={newRoomDialog}
+      {/* <ConfimrDialog
+        open={modalAction.isOpen}
         title={"Add new room"}
         message={"Please input room name."}
         withInput
@@ -724,7 +894,7 @@ export const ChatPage = () => {
         }}
       />
       <ConfimrDialog
-        open={joinRoomDialog}
+        open={modalAction.isOpen}
         title={"Join room"}
         message={"Please input Room ID to join a room."}
         withInput
@@ -734,7 +904,7 @@ export const ChatPage = () => {
         onConfirm={(e) => {
           handleJoinRoom(e);
         }}
-      />
+      /> */}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useAnimation } from "app/hooks/custom";
 import { HighlightCode } from "app/components";
 import { useDispatch } from "react-redux";
 import { setActiveRoute } from "store/activeRoute";
+import { useNavigate } from "react-router-dom";
 
 export const HomePage = () => {
   useAnimation();

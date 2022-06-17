@@ -17,7 +17,7 @@ import InputField from "../form/InputField";
 
 interface ConfirmDialogProps {
   open: boolean;
-  title: string;
+  title: any;
   message: string;
   withInput?: boolean;
   onConfirm: (input?: string) => void;
@@ -75,10 +75,10 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
       onClose={onCancel}
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle className="pt-2">
+      <DialogTitle className="pt-2 px-3">
         <span style={{ fontSize: "1rem" }}>{title}</span>
       </DialogTitle>
-      <DialogContent className={`${withInput ? "pb-0" : ""}`}>
+      <DialogContent className={`${withInput ? "pb-0" : ""} px-3`}>
         <div>
           <div style={{ fontSize: "0.8rem" }}>{message}</div>
           {withInput && (
@@ -109,8 +109,8 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
                   </div>
 
                   <DialogActions className="justify-content-between px-0">
-                    <Button onClick={onCancel}>Cancel</Button>
-                    <Button disabled={!isValid} type="submit">
+                    <Button  className="px-0 justify-content-start" onClick={onCancel}>Cancel</Button>
+                    <Button  className="px-0 justify-content-end" disabled={!isValid} type="submit">
                       Confirm
                     </Button>
                   </DialogActions>
@@ -121,10 +121,11 @@ const ConfimrDialog: React.FC<ConfirmDialogProps> = ({
         </div>
       </DialogContent>
       {!withInput && (
-        <DialogActions>
-          <Button onClick={onCancel}>Cancel</Button>
+        <DialogActions className="justify-content-between px-3">
+          <Button className="px-0 justify-content-start" onClick={onCancel}>Cancel</Button>
 
           <Button
+           className="px-0 justify-content-end"
             onClick={() => {
               onConfirm();
             }}
