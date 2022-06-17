@@ -4,6 +4,7 @@ import { RootState } from "store";
 import { Link } from "react-router-dom";
 import { setActiveRoute } from "store/activeRoute";
 import { useMediaQuery } from "react-responsive";
+import ImageUploading, { ImageListType } from "react-images-uploading";
 
 // react suite
 import ReadyRoundIcon from "@rsuite/icons/ReadyRound";
@@ -13,6 +14,8 @@ import SearchIcon from "@rsuite/icons/Search";
 import CopyIcon from "@rsuite/icons/Copy";
 import ArrowRightLineIcon from "@rsuite/icons/ArrowRightLine";
 import ExitIcon from "@rsuite/icons/Exit";
+import FileUploadIcon from "@rsuite/icons/FileUpload";
+import WarningRoundIcon from "@rsuite/icons/WarningRound";
 
 // form
 import { Input, Table } from "reactstrap";
@@ -35,6 +38,12 @@ import {
   Timestamp,
   where,
 } from "firebase/firestore";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import { db } from "app/hooks/firebase";
 
 // library
@@ -53,7 +62,7 @@ import ConfimrDialog from "app/components/dialog/confirmDialog";
 import { toast } from "react-toastify";
 
 const Schema = Yup.object().shape({
-  msg: Yup.string().required("required"),
+  msg: Yup.string(),
 });
 
 type FormItem = {
@@ -99,15 +108,29 @@ export const ChatPage = () => {
   });
 
   const [paddingBottom, setPaddingBottom] = useState<string>(
-    isMobile ? "7rem" : "1rem"
+    isMobile ? "7rem" : "8rem"
   );
   const [rows, setRows] = useState<number>(1);
 
   const [querying, setQuerying] = useState<any>(
     query(collection(db, "messages"), orderBy("createdAt"), limit(100))
   );
+
+  const [images, setImages] = useState<any>([]);
+
+  const onImageChange = (
+    imageList: ImageListType,
+    addUpdateIndex: number[] | undefined
+  ) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    setImages(imageList as never[]);
+  };
+
   const headerRef = useRef<any>(null);
   const scrollRef = useRef<any>(null);
+
+  const storage = getStorage();
 
   // change query when activeRoom change
   useEffect(() => {
@@ -257,7 +280,7 @@ export const ChatPage = () => {
         createdAt: Timestamp.now(),
       });
 
-      setModalAction({action: '' ,isOpen: false});
+      setModalAction({ action: "", isOpen: false });
       setActiveRoom({ id: newRoom.id, name: room });
     },
     [user]
@@ -271,7 +294,7 @@ export const ChatPage = () => {
         const members = roomData.data().members;
         if (members.includes(user!.uid)) {
           setActiveRoom({ id: roomData.id, name: roomData.data().name });
-          setModalAction({action: '' ,isOpen: false});
+          setModalAction({ action: "", isOpen: false });
         } else {
           // add user into members
           await updateDoc(roomRef, {
@@ -302,24 +325,107 @@ export const ChatPage = () => {
     values: FormItem,
     actions: FormikHelpers<FormItem>
   ) => {
-    const { msg } = values;
-    const trimmed = msg.trim();
-    if (trimmed.length > 0) {
-      const _q =
-        activeRoom.id === "public"
-          ? collection(db, "messages")
-          : collection(db, "rooms", activeRoom.id, "messages");
+    // handle image
+    const imageURL: string[] = [];
+    if (images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        const metadata = {
+          contentType: images[i].file.type,
+        };
+        const storageRef = ref(storage, "images/" + images[i].file.name);
+        const uploadTask = uploadBytesResumable(storageRef, images[i].file);
 
-      const message = {
-        uid: user!.uid,
-        displayName: user!.displayName,
-        photoURL: user!.photoURL,
-        message: trimmed,
-        createdAt: Timestamp.now(),
-      };
-      const docRef = await addDoc(_q, message);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            switch (error.code) {
+              case "storage/unauthorized":
+                console.log("User doesnt have permission to access the object");
+                break;
+              case "storage/canceled":
+                console.log("User canceled the upload");
+                break;
+              case "storage/unknown":
+                console.log("Unknown error occurred");
+                break;
+            }
+          },
+          async () => {
+            // Upload completed successfully, now we can get the download URL
+            await getDownloadURL(uploadTask.snapshot.ref).then(
+              async (downloadURL) => {
+                console.log("File available at", downloadURL);
+                imageURL.push(downloadURL);
+
+                if (imageURL.length === images.length) {
+                  console.log("all uploads done");
+                  console.log(imageURL);
+                  // handle text message
+                  const { msg } = values;
+                  const trimmed = msg?.trim();
+
+                  const _q =
+                    activeRoom.id === "public"
+                      ? collection(db, "messages")
+                      : collection(db, "rooms", activeRoom.id, "messages");
+
+                  const message = {
+                    uid: user!.uid,
+                    displayName: user!.displayName,
+                    photoURL: user!.photoURL,
+                    message: trimmed || "",
+                    imageURL: imageURL,
+                    createdAt: Timestamp.now(),
+                  };
+
+                  const docRef = await addDoc(_q, message);
+
+                  actions.resetForm();
+                  setImages([]);
+                }
+              }
+            );
+          }
+        );
+      }
+    } else {
+      const { msg } = values;
+      const trimmed = msg.trim();
+      if (trimmed.length > 0) {
+        const _q =
+          activeRoom.id === "public"
+            ? collection(db, "messages")
+            : collection(db, "rooms", activeRoom.id, "messages");
+
+        const message = {
+          uid: user!.uid,
+          displayName: user!.displayName,
+          photoURL: user!.photoURL,
+          message: trimmed,
+          imageURL: imageURL,
+          createdAt: Timestamp.now(),
+        };
+
+        const docRef = await addDoc(_q, message);
+      }
+      actions.resetForm();
+      setImages([]);
     }
-    actions.resetForm();
+
     // console.log("values", values);
     // submit to firebase
   };
@@ -328,9 +434,10 @@ export const ChatPage = () => {
   const handleRows = (rows: number) => {
     const _rows = rows > 5 ? 5 : rows;
     setRows(_rows);
-    if (isMobile) {
-      setPaddingBottom(`${_rows * 1.5 + 5.5}rem`);
-    }
+    isMobile
+      ? setPaddingBottom(`${_rows * 1.5 + 5.5}rem`)
+      : setPaddingBottom(`${_rows * 1.5 + 6.5}rem`);
+
     setTimeout(() => {
       isMobile
         ? window.scrollTo({
@@ -387,7 +494,7 @@ export const ChatPage = () => {
           >
             <div
               onClick={() => {
-                setModalAction({action: 'add' ,isOpen: true});
+                setModalAction({ action: "add", isOpen: true });
               }}
               className={`${
                 !showRooms ? "d-none" : ""
@@ -407,7 +514,7 @@ export const ChatPage = () => {
             </div>
             <div
               onClick={() => {
-                setModalAction({action: 'join' ,isOpen: true});
+                setModalAction({ action: "join", isOpen: true });
               }}
               className={`${
                 !showRooms ? "d-none" : ""
@@ -493,7 +600,7 @@ export const ChatPage = () => {
               <div>
                 <div
                   onClick={() => {
-                    setModalAction({action: 'leave' ,isOpen: true});
+                    setModalAction({ action: "leave", isOpen: true });
                   }}
                   className={`${
                     activeRoom.id === "public" ? "d-none" : ""
@@ -575,7 +682,7 @@ export const ChatPage = () => {
               </div>
               <div
                 onClick={() => {
-                  setModalAction({action: 'add' ,isOpen: true});
+                  setModalAction({ action: "add", isOpen: true });
                 }}
                 className={`${
                   !showRooms ? "d-none" : ""
@@ -595,7 +702,7 @@ export const ChatPage = () => {
               </div>
               <div
                 onClick={() => {
-                  setModalAction({action: 'join' ,isOpen: true});
+                  setModalAction({ action: "join", isOpen: true });
                 }}
                 className={`${
                   !showRooms ? "d-none" : ""
@@ -683,7 +790,7 @@ export const ChatPage = () => {
                   <div>
                     <div
                       onClick={() => {
-                        setModalAction({action: 'leave' ,isOpen: true});
+                        setModalAction({ action: "leave", isOpen: true });
                       }}
                       className={`${
                         activeRoom.id === "public" ? "d-none" : ""
@@ -771,6 +878,7 @@ export const ChatPage = () => {
               message={item.message}
               self={user?.uid === item?.uid}
               avatar={item.photoURL}
+              imageURL={item.imageURL}
               uid={item.uid}
               createdAt={item.createdAt}
               onPress={(action) => {
@@ -816,6 +924,89 @@ export const ChatPage = () => {
                 </div>
 
                 <div className="d-flex align-items-center">
+                  <ImageUploading
+                    multiple
+                    value={images}
+                    onChange={onImageChange}
+                    maxNumber={undefined}
+                    onError={(e) => {
+                      toast.error(
+                        e?.maxFileSize
+                          ? "image must be smaller than 2MB"
+                          : "Unsupported format",
+                        {
+                          theme: "colored",
+                          position: isMobile ? "top-center" : "top-right",
+                          className: "opacity-toast text-white",
+                        }
+                      );
+                    }}
+                    maxFileSize={2 * 1024 * 1024}
+                  >
+                    {({
+                      imageList,
+                      onImageUpload,
+                      onImageRemoveAll,
+                      onImageUpdate,
+                      onImageRemove,
+                      errors,
+                    }) => (
+                      // write your building UI
+                      <div
+                        className={`${
+                          isMobile ? "" : "position-relative"
+                        } upload__image-wrapper d-flex`}
+                      >
+                        <div
+                          className={`${
+                            isMobile ? "" : "me-4"
+                          } d-flex overflow-auto end-0 position-fixed`}
+                          style={{
+                            bottom: paddingBottom,
+                            maxWidth: isMobile
+                              ? "100vw"
+                              : scrollRef?.current?.offsetWidth,
+                          }}
+                        >
+                          {imageList.map((image, index) => (
+                            <div key={index} className="image-item d-flex">
+                              <img
+                                src={image.dataURL}
+                                alt=""
+                                height="100"
+                                className="me-2"
+                              />
+                              <button
+                                className="btn p-0 me-2 align-self-start"
+                                style={{ borderRadius: "50%", border: "none" }}
+                                onClick={() => onImageRemove(index)}
+                              >
+                                <WarningRoundIcon
+                                  width={15}
+                                  height={15}
+                                  fill={ICON_COLOR}
+                                />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        <button
+                          type="button"
+                          className={`btn p-0 me-2`}
+                          style={{ borderRadius: "50%", border: "none" }}
+                          onClick={onImageUpload}
+                        >
+                          <FileUploadIcon
+                            width={30}
+                            height={30}
+                            fill={ICON_COLOR}
+                          />
+                        </button>
+                      </div>
+                    )}
+                  </ImageUploading>
+
                   <button
                     className="btn p-0"
                     style={{ borderRadius: "50%", border: "none" }}
@@ -844,28 +1035,26 @@ export const ChatPage = () => {
             ? "Leave room"
             : ""
         }
-        withInput={ ['add', 'join'].includes(modalAction.action)}
+        withInput={["add", "join"].includes(modalAction.action)}
         message={
           modalAction.action === "delete"
-          ? "Deleted content cannot be recovered."
-          : modalAction.action === "add"
-          ? "Please input room name."
-          : modalAction.action === "join"
-          ? "Please input Room ID to join a room."
-          : modalAction.action === "leave"
-          ? "Confirm to leave this room?"
-          : ""
-          
-          
+            ? "Deleted content cannot be recovered."
+            : modalAction.action === "add"
+            ? "Please input room name."
+            : modalAction.action === "join"
+            ? "Please input Room ID to join a room."
+            : modalAction.action === "leave"
+            ? "Confirm to leave this room?"
+            : ""
         }
         onCancel={() => {
-          if(modalAction.action === "delete"){
+          if (modalAction.action === "delete") {
             setPendingAction(undefined);
           }
-          setModalAction({action: '' ,isOpen: false});
+          setModalAction({ action: "", isOpen: false });
         }}
         onConfirm={(e) => {
-          switch(modalAction.action){
+          switch (modalAction.action) {
             case "delete":
               handleOptions();
               break;
@@ -878,7 +1067,6 @@ export const ChatPage = () => {
             case "leave":
               handleLeaveRoom();
           }
-          
         }}
       />
       {/* <ConfimrDialog

@@ -34,12 +34,11 @@ export function useFirestoreQuery(query: Query<DocumentData>) {
       }));
       // Update state
       setDocs(data);
-      // console.log(data);
+      console.log(data);
     });
 
     // Detach listener
     return () => {
-      console.log("clean up previous snapshot");
       unsubscribe()
     };
   }, [query]);

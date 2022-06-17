@@ -38,6 +38,7 @@
     "react-dom": "^18.1.0",
     "react-highlight": "^0.14.0",
     "react-hook-form": "^7.31.3",
+    "react-images-uploading": "^3.1.6",
     "react-meta-tags": "^1.0.1",
     "react-quill": "^2.0.0-beta.4",
     "react-redux": "^8.0.2",

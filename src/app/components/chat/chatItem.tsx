@@ -7,6 +7,7 @@ interface Props {
   self: boolean;
   message: string;
   avatar: string;
+  imageURL?: string[];
   createdAt: string;
   onPress: (item: string) => void;
 }
@@ -17,6 +18,7 @@ const ChatItem: React.FC<Props> = ({
   self = true,
   message,
   avatar,
+  imageURL,
   createdAt,
   onPress,
 }) => {
@@ -49,7 +51,26 @@ const ChatItem: React.FC<Props> = ({
         />
       </div>
       <div className={`d-flex mb-2 justify-content-end`}>
-        <div className="chat-bubble">{renderText(message)}</div>
+        <div className="chat-bubble">
+          <div className="message">{renderText(message)}</div>
+          {imageURL && (
+            <div className="image-container">
+              {imageURL.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={url}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "0.5rem",
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   ) : (
@@ -72,7 +93,26 @@ const ChatItem: React.FC<Props> = ({
           <div className="date col text-start">{createdAt}</div>
         </div>
       </div>
-      <div className="chat-bubble">{renderText(message)}</div>
+      <div className="chat-bubble">
+        <div className="message">{renderText(message)}</div>
+        {imageURL && (
+          <div className="image-container">
+            {imageURL.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={url}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "0.5rem",
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -69,7 +69,7 @@ export const LoginPage = () => {
           updatedAt: Timestamp.now(),
         };
         await setDoc(doc(db, "users", user.uid), userData);
-      }else{
+      } else {
         // update existing user
         const userData = {
           displayName: user.displayName || "",
@@ -98,9 +98,32 @@ export const LoginPage = () => {
           fontSize: "0.8rem",
         }}
       >
-        Make use of firebase authentication Please enable broswer popup for
-        login
+        Make use of firebase authentication. Please enable broswer popup for
+        login.
       </p>
+      <div>
+        <div className="text-danger text-center">Disclaimer</div>
+        <div>
+          Server will only store the following data returned by firebase:
+        </div>
+        <div className="d-flex justify-content-center">
+          <ul
+            className="remark mb-1"
+            style={{
+              fontSize: "0.8rem",
+            }}
+          >
+            <li>firebase auto-generated uid</li>
+            <li>your gmail</li>
+            <li>your google account display name</li>
+            <li>avatar</li>
+          </ul>
+        </div>
+
+        <div className="mb-2 text-center">
+          And will not be used for commercial purposes.
+        </div>
+      </div>
       <button
         onClick={handleLoginGoogle}
         style={{
