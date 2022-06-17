@@ -315,9 +315,11 @@ export const ChatPage = () => {
   );
 
   const handleLeaveRoom = useCallback(async () => {
-    if(activeRoom.id !== "public") {
+    if (activeRoom.id !== "public") {
       const roomRef = doc(db, "rooms", activeRoom.id);
-      const newMemberList = activeMembers.filter((mem) => mem.uid !== user!.uid);
+      const newMemberList = activeMembers.filter(
+        (mem) => mem.uid !== user!.uid
+      );
       await updateDoc(roomRef, { members: newMemberList });
     }
     setActiveRoom({ id: "public", name: "Public" });
@@ -332,6 +334,11 @@ export const ChatPage = () => {
     // handle image
     const imageURL: string[] = [];
     if (images.length > 0) {
+      const load = toast.loading(`Uploading image...`, {
+        theme: "colored",
+        position: "top-right",
+        className: "opacity-toast text-white",
+      });
       for (let i = 0; i < images.length; i++) {
         const metadata = {
           contentType: images[i].file.type,
@@ -400,6 +407,7 @@ export const ChatPage = () => {
 
                   actions.resetForm();
                   setImages([]);
+                  toast.update(load, {render: 'Images Uploaded successfully', type: 'default', className: 'opacity-toast text-white', autoClose: 2000, isLoading: false}); 
                 }
               }
             );
@@ -878,6 +886,8 @@ export const ChatPage = () => {
           {messages.map((item, index) => (
             <ChatItem
               key={index}
+              parentLength={messages.length}
+              itemIndex={index}
               name={item.displayName}
               message={item.message}
               self={user?.uid === item?.uid}
@@ -888,6 +898,17 @@ export const ChatPage = () => {
               onPress={(action) => {
                 setPendingAction({ action: action, id: item.id });
                 setModalAction({ action: "delete", isOpen: true });
+              }}
+              scrollToBottom={() => {
+                isMobile
+                ? window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth",
+                  })
+                : scrollRef.current.scrollTo({
+                    top: scrollRef.current.scrollHeight,
+                    behavior: "smooth",
+                  });
               }}
             />
           ))}

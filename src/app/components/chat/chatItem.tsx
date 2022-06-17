@@ -9,7 +9,10 @@ interface Props {
   avatar: string;
   imageURL?: string[];
   createdAt: string;
+  parentLength: number;
+  itemIndex: number;
   onPress: (item: string) => void;
+  scrollToBottom: () => void;
 }
 
 const ChatItem: React.FC<Props> = ({
@@ -20,7 +23,10 @@ const ChatItem: React.FC<Props> = ({
   avatar,
   imageURL,
   createdAt,
+  parentLength,
+  itemIndex,
   onPress,
+  scrollToBottom,
 }) => {
   const URL_REGEX =
     /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -66,6 +72,16 @@ const ChatItem: React.FC<Props> = ({
                     objectFit: "cover",
                     borderRadius: "0.5rem",
                   }}
+                  onLoad={() => {
+                    if (
+                      imageURL.length === index + 1 &&
+                      parentLength === itemIndex + 1
+                    ) {
+                      setTimeout(() => {
+                        scrollToBottom();
+                      }, 50);
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -107,6 +123,16 @@ const ChatItem: React.FC<Props> = ({
                   height: "100%",
                   objectFit: "cover",
                   borderRadius: "0.5rem",
+                }}
+                onLoad={() => {
+                  if (
+                    imageURL.length === index + 1 &&
+                    parentLength === itemIndex + 1
+                  ) {
+                    setTimeout(() => {
+                      scrollToBottom();
+                    }, 50);
+                  }
                 }}
               />
             ))}
