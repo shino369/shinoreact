@@ -8,3 +8,4 @@ export {default as CustomDropdown } from './form/dropdown';
 export {default as Spinner} from './layout/spinner';
 export {default as ConfirmDialog} from './dialog/confirmDialog';
 export * from './chat';
+export * from './image';

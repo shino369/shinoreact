@@ -450,17 +450,17 @@ export const ChatPage = () => {
       ? setPaddingBottom(`${_rows * 1.5 + 5.5}rem`)
       : setPaddingBottom(`${_rows * 1.5 + 6.5}rem`);
 
-    setTimeout(() => {
-      isMobile
-        ? window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth",
-          })
-        : scrollRef.current.scrollTo({
-            top: scrollRef.current.scrollHeight,
-            behavior: "smooth",
-          });
-    }, 50);
+    // setTimeout(() => {
+    //   isMobile
+    //     ? window.scrollTo({
+    //         top: document.body.scrollHeight,
+    //         behavior: "smooth",
+    //       })
+    //     : scrollRef.current.scrollTo({
+    //         top: scrollRef.current.scrollHeight,
+    //         behavior: "smooth",
+    //       });
+    // }, 50);
   };
 
   // delete message
@@ -494,6 +494,7 @@ export const ChatPage = () => {
         className={`${
           isMobile ? "d-none" : ""
         } start-0 h-100 d-flex align-items-start justify-content-start bg-room overflow-hidden`}
+        style={{maxWidth: '12.5rem'}}
       >
         <div
           className={`p-0 d-flex flex-column h-100 justify-content-start position-relative`}
@@ -871,7 +872,7 @@ export const ChatPage = () => {
           }}
           className={`${
             isMobile ? "position-fixed" : "position-absolute"
-          } scroll-to pointer bg-dark transition mb-5 mb-sm-0 shadow`}
+          } scroll-to d-flex align-items-center pointer bg-dark transition mb-5 mb-sm-0 shadow`}
         >
           <Icon svg name="arrow-down" size={20} color={"white"} />
         </div>
@@ -886,8 +887,6 @@ export const ChatPage = () => {
           {messages.map((item, index) => (
             <ChatItem
               key={index}
-              parentLength={messages.length}
-              itemIndex={index}
               name={item.displayName}
               message={item.message}
               self={user?.uid === item?.uid}
@@ -895,20 +894,11 @@ export const ChatPage = () => {
               imageURL={item.imageURL}
               uid={item.uid}
               createdAt={item.createdAt}
+              isMobile={isMobile}
+              containerWidth={scrollRef?.current?.offsetWidth}
               onPress={(action) => {
                 setPendingAction({ action: action, id: item.id });
                 setModalAction({ action: "delete", isOpen: true });
-              }}
-              scrollToBottom={() => {
-                isMobile
-                ? window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: "smooth",
-                  })
-                : scrollRef.current.scrollTo({
-                    top: scrollRef.current.scrollHeight,
-                    behavior: "smooth",
-                  });
               }}
             />
           ))}

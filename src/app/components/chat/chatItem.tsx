@@ -1,4 +1,5 @@
 import CustomDropdown from "../form/dropdown";
+import { ImageItem } from "../image";
 import "./chatItem.scss";
 
 interface Props {
@@ -9,10 +10,9 @@ interface Props {
   avatar: string;
   imageURL?: string[];
   createdAt: string;
-  parentLength: number;
-  itemIndex: number;
+  isMobile: boolean;
+  containerWidth: number;
   onPress: (item: string) => void;
-  scrollToBottom: () => void;
 }
 
 const ChatItem: React.FC<Props> = ({
@@ -23,10 +23,9 @@ const ChatItem: React.FC<Props> = ({
   avatar,
   imageURL,
   createdAt,
-  parentLength,
-  itemIndex,
+  isMobile,
+  containerWidth,
   onPress,
-  scrollToBottom,
 }) => {
   const URL_REGEX =
     /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
@@ -62,26 +61,18 @@ const ChatItem: React.FC<Props> = ({
           {imageURL && (
             <div className="image-container">
               {imageURL.map((url, index) => (
-                <img
+                <ImageItem
+                  isMobile={isMobile}
+                  containerWidth={containerWidth}
+                  url={url}
                   key={index}
-                  src={url}
-                  alt={url}
                   style={{
                     width: "100%",
                     height: "100%",
-                    objectFit: "cover",
+                    objectFit: "contain",
                     borderRadius: "0.5rem",
                   }}
-                  onLoad={() => {
-                    if (
-                      imageURL.length === index + 1 &&
-                      parentLength === itemIndex + 1
-                    ) {
-                      setTimeout(() => {
-                        scrollToBottom();
-                      }, 50);
-                    }
-                  }}
+                  onPress={() => {}}
                 />
               ))}
             </div>
@@ -114,26 +105,18 @@ const ChatItem: React.FC<Props> = ({
         {imageURL && (
           <div className="image-container">
             {imageURL.map((url, index) => (
-              <img
+              <ImageItem
+                isMobile={isMobile}
+                containerWidth={containerWidth}
+                url={url}
                 key={index}
-                src={url}
-                alt={url}
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
+                  objectFit: "contain",
                   borderRadius: "0.5rem",
                 }}
-                onLoad={() => {
-                  if (
-                    imageURL.length === index + 1 &&
-                    parentLength === itemIndex + 1
-                  ) {
-                    setTimeout(() => {
-                      scrollToBottom();
-                    }, 50);
-                  }
-                }}
+                onPress={() => {}}
               />
             ))}
           </div>
